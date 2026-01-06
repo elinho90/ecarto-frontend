@@ -1,0 +1,88 @@
+<div class="type-projet-list-container">
+    <!-- Header -->
+    <div class="list-header">
+        <div class="header-content">
+            <div class="header-title-section">
+                <h1 class="page-title">
+                    <i class="fas fa-tags title-icon"></i>
+                    Types de Projet
+                </h1>
+                <p class="page-subtitle">Définissez et catégorisez vos initiatives techniques</p>
+            </div>
+
+            <div class="header-actions">
+                <app-button variant="secondary" icon="fas fa-sync" size="sm" (clicked)="loadTypesProjet()">
+                    Actualiser
+                </app-button>
+                <app-button variant="primary" icon="fas fa-plus" (clicked)="onAddNew()" *ngIf="canEdit">
+                    Nouveau Type
+                </app-button>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="list-toolbar">
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" [formControl]="searchControl" placeholder="Rechercher un type de projet..."
+                        class="search-input">
+                    <button *ngIf="searchControl.value" class="clear-search" (click)="searchControl.reset()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="list-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Total des catégories</span>
+                    <span class="stat-value">{{ totalCount }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <app-loading *ngIf="isLoading" type="spinner" text="Chargement des types de projet..."></app-loading>
+
+    <!-- Types Grid -->
+    <div *ngIf="!isLoading && filteredTypes.length > 0" class="types-grid" [@listAnimation]="filteredTypes.length">
+        <div *ngFor="let type of filteredTypes" class="type-card">
+            <div class="type-card-header">
+                <div class="type-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div class="type-meta">
+                    <span class="type-id">ID: #{{ type.id }}</span>
+                </div>
+            </div>
+
+            <div class="type-card-body">
+                <h3 class="type-title">{{ type.nom }}</h3>
+                <p class="type-description">{{ type.description || 'Aucune description disponible pour ce type de
+                    projet.' }}</p>
+            </div>
+
+            <div class="type-card-footer" *ngIf="canEdit">
+                <div class="card-actions justify-end">
+                    <button class="action-btn edit-btn" (click)="onEdit(type.id)" matTooltip="Modifier">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn delete-btn" (click)="onDelete(type.id)" matTooltip="Supprimer">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && filteredTypes.length === 0" class="empty-state">
+        <div class="empty-icon">
+            <i class="fas fa-search"></i>
+        </div>
+        <h3>Aucun résultat trouvé</h3>
+        <p>Essayez d'ajuster vos critères de recherche.</p>
+        <app-button variant="ghost" (clicked)="searchControl.reset()">Effacer la recherche</app-button>
+    </div>
+</div>

@@ -1,0 +1,137 @@
+<div class="form-container">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>
+                <mat-icon>{{ isEditMode ? 'edit' : 'person_add' }}</mat-icon>
+                {{ isEditMode ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur' }}
+            </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+            <div *ngIf="isLoading" class="loading-container">
+                <mat-spinner></mat-spinner>
+            </div>
+
+            <form [formGroup]="utilisateurForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+                <div class="form-grid">
+                    <!-- Nom -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Nom</mat-label>
+                        <input matInput formControlName="nom" placeholder="Nom de famille" required>
+                        <mat-icon matPrefix>person</mat-icon>
+                        <mat-error *ngIf="utilisateurForm.get('nom')?.hasError('required')">
+                            Le nom est requis
+                        </mat-error>
+                        <mat-error *ngIf="utilisateurForm.get('nom')?.hasError('maxlength')">
+                            Maximum 100 caractères
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Prénom -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Prénom</mat-label>
+                        <input matInput formControlName="prenom" placeholder="Prénom" required>
+                        <mat-icon matPrefix>person</mat-icon>
+                        <mat-error *ngIf="utilisateurForm.get('prenom')?.hasError('required')">
+                            Le prénom est requis
+                        </mat-error>
+                        <mat-error *ngIf="utilisateurForm.get('prenom')?.hasError('maxlength')">
+                            Maximum 100 caractères
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Email -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Email</mat-label>
+                        <input matInput type="email" formControlName="email" placeholder="email@example.com" required>
+                        <mat-icon matPrefix>email</mat-icon>
+                        <mat-error *ngIf="utilisateurForm.get('email')?.hasError('required')">
+                            L'email est requis
+                        </mat-error>
+                        <mat-error *ngIf="utilisateurForm.get('email')?.hasError('email')">
+                            Format d'email invalide
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Mot de passe -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>{{ isEditMode ? 'Nouveau mot de passe (optionnel)' : 'Mot de passe' }}</mat-label>
+                        <input matInput type="password" formControlName="password"
+                            [placeholder]="isEditMode ? 'Laisser vide pour ne pas changer' : 'Minimum 6 caractères'">
+                        <mat-icon matPrefix>lock</mat-icon>
+                        <mat-error *ngIf="utilisateurForm.get('password')?.hasError('required')">
+                            Le mot de passe est requis
+                        </mat-error>
+                        <mat-error *ngIf="utilisateurForm.get('password')?.hasError('minlength')">
+                            Minimum 6 caractères
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Rôle -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Rôle</mat-label>
+                        <mat-select formControlName="role" required>
+                            <mat-option *ngFor="let role of roles" [value]="role">
+                                {{ getRoleLabel(role) }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon matPrefix>badge</mat-icon>
+                        <mat-error *ngIf="utilisateurForm.get('role')?.hasError('required')">
+                            Le rôle est requis
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Téléphone -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Téléphone</mat-label>
+                        <input matInput formControlName="telephone" placeholder="+225 XX XX XX XX XX">
+                        <mat-icon matPrefix>phone</mat-icon>
+                        <mat-error *ngIf="utilisateurForm.get('telephone')?.hasError('maxlength')">
+                            Maximum 20 caractères
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Département -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Département</mat-label>
+                        <input matInput formControlName="departement" placeholder="Département">
+                        <mat-icon matPrefix>business</mat-icon>
+                        <mat-error *ngIf="utilisateurForm.get('departement')?.hasError('maxlength')">
+                            Maximum 100 caractères
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Poste -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Poste</mat-label>
+                        <input matInput formControlName="poste" placeholder="Fonction / Poste">
+                        <mat-icon matPrefix>work</mat-icon>
+                        <mat-error *ngIf="utilisateurForm.get('poste')?.hasError('maxlength')">
+                            Maximum 100 caractères
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Actif -->
+                    <div class="toggle-field full-width">
+                        <mat-slide-toggle formControlName="actif" color="primary">
+                            Compte actif
+                        </mat-slide-toggle>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button mat-raised-button type="button" (click)="onCancel()" [disabled]="isSubmitting">
+                        <mat-icon>cancel</mat-icon>
+                        Annuler
+                    </button>
+                    <button mat-raised-button color="primary" type="submit"
+                        [disabled]="isSubmitting || utilisateurForm.invalid">
+                        <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+                        <mat-icon *ngIf="!isSubmitting">{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+                        {{ isEditMode ? 'Enregistrer' : 'Créer' }}
+                    </button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -1,0 +1,78 @@
+<div class="login-container">
+  <div class="login-background"></div>
+
+  <div class="login-wrapper">
+    <div class="login-card animate-fadeIn">
+      <div class="login-header">
+        <div class="logo-container-header">
+          <app-logo [scale]="1.2"></app-logo>
+        </div>
+        <h1 class="login-title">Bienvenue</h1>
+        <p class="login-subtitle">Connectez-vous à votre compte</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-group">
+          <label for="email" class="form-label">
+            <i class="fas fa-envelope form-icon"></i>
+            Adresse Email
+          </label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input matInput id="email" type="email" formControlName="email" placeholder="exemple@domaine.com">
+            <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+              {{ getErrorMessage('email') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">
+            <i class="fas fa-lock form-icon"></i>
+            Mot de passe
+          </label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input matInput id="password" [type]="hidePassword ? 'password' : 'text'" formControlName="password"
+              placeholder="Votre mot de passe">
+            <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+              [attr.aria-label]="'Changer visibilité'" [attr.aria-pressed]="hidePassword">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+              {{ getErrorMessage('password') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="forgot-password">
+          <a routerLink="/auth/forgot-password" class="forgot-link">
+            Mot de passe oublié ?
+          </a>
+        </div>
+
+        <button mat-raised-button type="submit" class="login-button" [disabled]="loginForm.invalid || isLoading"
+          [class.loading]="isLoading">
+          <span *ngIf="!isLoading">
+            <i class="fas fa-sign-in-alt button-icon"></i>
+            Se connecter
+          </span>
+          <span *ngIf="isLoading">
+            <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+            Connexion...
+          </span>
+        </button>
+
+      </form>
+
+      <div class="login-footer">
+        <p class="footer-text">
+          © 2025 E-Carto Plateforme. Tous droits réservés.
+        </p>
+        <div class="footer-links">
+          <a href="#">Politique de confidentialité</a>
+          <span class="separator">•</span>
+          <a href="#">Conditions d'utilisation</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

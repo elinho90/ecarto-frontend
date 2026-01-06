@@ -1,0 +1,127 @@
+@use '../../../../scss/variables' as *;
+
+.map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  .map-container {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+/* --- CUSTOM MARKERS --- */
+::ng-deep {
+  .custom-div-icon {
+    background: transparent !important;
+    border: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .site-marker-pulse {
+    width: 16px;
+    height: 16px;
+    background: $primary-500;
+    border: 3px solid white;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba($primary-500, 0.4);
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      right: -3px;
+      bottom: -3px;
+      border-radius: 50%;
+      border: 3px solid $primary-500;
+      animation: ripple 1.5s infinite;
+      opacity: 0;
+    }
+  }
+
+  @keyframes ripple {
+    0% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+
+    100% {
+      transform: scale(2.5);
+      opacity: 0;
+    }
+  }
+
+  /* POPUP STYLING */
+  .leaflet-popup-content-wrapper {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 12px;
+    box-shadow: $shadow-floating;
+    border: 1px solid rgba($secondary-900, 0.05);
+  }
+
+  .leaflet-popup-tip {
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .popup-content {
+    h3 {
+      font-family: $font-sans;
+      font-weight: 700;
+      color: $secondary-900;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 13px;
+      color: $neutral-600;
+      margin: 4px 0;
+      line-height: 1.4;
+
+      strong {
+        color: $secondary-900;
+        font-weight: 600;
+      }
+    }
+
+    .popup-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: $primary-50;
+      color: $primary-500;
+      margin-top: 8px;
+    }
+  }
+
+  .leaflet-control-zoom {
+    border: none !important;
+    box-shadow: $shadow-soft !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+    margin-right: 20px !important;
+
+    a {
+      background: rgba(255, 255, 255, 0.8) !important;
+      backdrop-filter: blur(10px);
+      color: $secondary-900 !important;
+      border: none !important;
+      font-weight: 700 !important;
+
+      &:hover {
+        background: $primary-500 !important;
+        color: white !important;
+      }
+    }
+  }
+}

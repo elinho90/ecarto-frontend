@@ -1,0 +1,13 @@
+<div 
+  class="card"
+  [class.card-hoverable]="hoverable"
+  [class.card-border]="border"
+  [class.card-shadow-none]="shadow === 'none'"
+  [class.card-shadow-sm]="shadow === 'sm'"
+  [class.card-shadow-lg]="shadow === 'lg'"
+  [class.p-0]="padding === 'none'"
+  [class.p-4]="padding === 'sm'"
+  [class.p-6]="padding === 'md'"
+  [class.p-8]="padding === 'lg'">
+  <ng-content></ng-content>
+</div>

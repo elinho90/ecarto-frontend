@@ -1,0 +1,183 @@
+<div class="projet-list-container">
+  <!-- Header -->
+  <div class="list-header">
+    <div class="header-content">
+      <div class="header-title-section">
+        <h1 class="page-title">
+          <i class="fas fa-project-diagram title-icon"></i>
+          Gestion des Projets
+        </h1>
+        <p class="page-subtitle">Liste de tous les projets informatiques</p>
+      </div>
+
+      <div class="header-actions">
+        <app-button variant="ghost" icon="fas fa-filter" size="sm" (clicked)="openFilters()">
+          Filtres
+          <app-badge *ngIf="activeFiltersCount" variant="primary" size="sm">
+            {{ activeFiltersCount }}
+          </app-badge>
+        </app-button>
+
+        <app-button variant="primary" icon="fas fa-plus" routerLink="../new">
+          Nouveau Projet
+        </app-button>
+      </div>
+    </div>
+
+    <!-- Search and Stats -->
+    <div class="list-toolbar">
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" [formControl]="searchControl"
+            placeholder="Rechercher un projet par nom, description, statut..." class="search-input">
+          <button *ngIf="searchControl.value" class="clear-search" (click)="searchControl.reset()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="list-stats">
+        <div class="stat-item">
+          <span class="stat-label">Total</span>
+          <span class="stat-value">{{ totalCount }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Actifs</span>
+          <span class="stat-value badge-success">{{ activeCount }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">En cours</span>
+          <span class="stat-value badge-warning">{{ inProgressCount }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <app-loading *ngIf="isLoading" type="spinner" text="Chargement des projets..."></app-loading>
+
+  <!-- Projects Grid -->
+  <div *ngIf="!isLoading && projets.length > 0" class="projects-grid">
+    <div *ngFor="let projet of projets" class="project-card">
+      <div class="project-card-header">
+        <div class="project-status">
+          <app-badge [variant]="getStatusVariant(projet.statut)" [dot]="true">
+            {{ projet.statut }}
+          </app-badge>
+        </div>
+        <div class="project-priority">
+          <app-badge [variant]="getPriorityVariant(projet.priorite)" size="sm" [outline]="true">
+            <i class="fas fa-flag"></i>
+            {{ projet.priorite }}
+          </app-badge>
+        </div>
+      </div>
+
+      <div class="project-card-body">
+        <h3 class="project-title">
+          {{ projet.nom }}
+          <span class="project-code">#{{ projet.code || projet.id }}</span>
+        </h3>
+
+        <p class="project-description">
+          {{ projet.description | slice:0:120 }}{{ projet.description.length > 120 ? '...' : '' }}
+        </p>
+
+        <div class="project-meta">
+          <div class="meta-item">
+            <i class="fas fa-tag meta-icon"></i>
+            <span class="meta-text">{{ projet.typeProjetNom || 'Non spécifié' }}</span>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-calendar-alt meta-icon"></i>
+            <span class="meta-text">{{ formatDate(projet.dateDebut) }}</span>
+          </div>
+          <div class="meta-item" *ngIf="projet.dateFinPrevue">
+            <i class="fas fa-hourglass-end meta-icon"></i>
+            <span class="meta-text">{{ getDaysRemaining(projet.dateFinPrevue) }} jours restants</span>
+          </div>
+        </div>
+
+        <div class="project-team">
+          <div class="team-avatars">
+            <div class="team-avatar" *ngFor="let member of getTeamMembers(projet)">
+              <img [src]="member.avatar || 'assets/default-avatar.png'" [alt]="member.nom">
+              <span class="avatar-tooltip">{{ member.prenom }} {{ member.nom }}</span>
+            </div>
+            <div *ngIf="getTeamCount(projet) > 3" class="team-more">
+              +{{ getTeamCount(projet) - 3 }}
+            </div>
+          </div>
+          <div class="team-count">
+            <i class="fas fa-users"></i>
+            {{ getTeamCount(projet) }} membres
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card-footer">
+        <div class="project-progress">
+          <div class="progress-header">
+            <span class="progress-label">Progression</span>
+            <span class="progress-value">{{ projet.progression || 0 }}%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width]="(projet.progression || 0) + '%'"></div>
+          </div>
+        </div>
+
+        <div class="project-actions">
+          <button class="action-btn view-btn" (click)="viewProjet(projet.id!)" matTooltip="Voir les détails">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button class="action-btn edit-btn" (click)="editProjet(projet.id!)" matTooltip="Modifier">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="action-btn delete-btn" (click)="deleteProjet(projet.id!)" matTooltip="Supprimer">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && projets.length === 0" class="empty-state">
+    <div class="empty-icon">
+      <i class="fas fa-project-diagram"></i>
+    </div>
+    <h3>Aucun projet trouvé</h3>
+    <p *ngIf="searchControl.value">Aucun résultat pour "{{ searchControl.value }}"</p>
+    <p *ngIf="!searchControl.value">Commencez par créer votre premier projet</p>
+    <app-button variant="primary" icon="fas fa-plus" routerLink="new">
+      Créer un projet
+    </app-button>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!isLoading && projets.length > 0" class="pagination">
+    <div class="pagination-info">
+      Affichage de <strong>{{ startIndex + 1 }}-{{ endIndex }}</strong> sur <strong>{{ totalCount }}</strong> projets
+    </div>
+    <div class="pagination-controls">
+      <button class="pagination-btn" [disabled]="currentPage === 1" (click)="previousPage()">
+        <i class="fas fa-chevron-left"></i>
+        Précédent
+      </button>
+
+      <div class="pagination-numbers">
+        <button *ngFor="let page of getPageNumbers()" [class.active]="page === currentPage" class="page-number"
+          (click)="goToPage(page)">
+          {{ page }}
+        </button>
+        <span *ngIf="showEllipsis" class="page-ellipsis">...</span>
+      </div>
+
+      <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
+        Suivant
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</div>

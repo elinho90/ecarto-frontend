@@ -1,0 +1,110 @@
+<div class="site-map-page-container">
+  <!-- Header Page -->
+  <div class="list-header no-margin">
+    <div class="header-content">
+      <div class="header-title-section">
+        <h1 class="page-title">
+          <i class="fas fa-map-marked-alt title-icon"></i>
+          Cartographie SI
+        </h1>
+        <p class="page-subtitle">Visualisation immersive et géolocalisée de vos actifs réseau</p>
+      </div>
+
+      <div class="header-actions">
+        <app-button variant="secondary" icon="fas fa-sync" size="sm" (clicked)="onRefresh()">
+          Actualiser
+        </app-button>
+        <app-button variant="primary" icon="fas fa-plus" (clicked)="onAddSite()">
+          Nouveau Site
+        </app-button>
+      </div>
+    </div>
+  </div>
+
+  <div class="immersive-map-container">
+    <!-- Carte en arrière-plan -->
+    <div class="map-wrapper" [class.loading]="isLoading">
+      <app-map *ngIf="!isLoading" [sites]="filteredSites" height="100%" (siteClick)="onSiteClick($event)">
+      </app-map>
+
+      <!-- Overlay de chargement -->
+      <div *ngIf="isLoading" class="map-loader">
+        <mat-spinner diameter="50" strokeWidth="3"></mat-spinner>
+        <span>Initialisation de la cartographie...</span>
+      </div>
+    </div>
+
+    <!-- Panel de Filtrage Flottant (Glassmorphism) -->
+    <div class="floating-panel filters-panel glass-effect animate-fade-in" [class.collapsed]="!sidebarOpen">
+      <div class="panel-header">
+        <div class="title">
+          <i class="fas fa-filter mr-2 text-primary-500"></i>
+          <span>Filtres Avancés</span>
+        </div>
+        <button class="toggle-btn" (click)="toggleSidebar()">
+          <i class="fas" [ngClass]="sidebarOpen ? 'fa-times' : 'fa-sliders-h'"></i>
+        </button>
+      </div>
+
+      <div class="panel-content" *ngIf="sidebarOpen">
+        <form [formGroup]="filterForm" class="filter-form">
+          <div class="filter-group">
+            <label>Type de site</label>
+            <select formControlName="typeSite" class="modern-select">
+              <option value="">Tous les types</option>
+              <option *ngFor="let type of typeSiteOptions" [value]="type">
+                {{ formatTypeSite(type) }}
+              </option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Statut opérationnel</label>
+            <select formControlName="statut" class="modern-select">
+              <option value="">Tous les statuts</option>
+              <option *ngFor="let statut of statutOptions" [value]="statut">
+                {{ formatStatut(statut) }}
+              </option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Région</label>
+            <select formControlName="region" (change)="onRegionChange()" class="modern-select">
+              <option value="">Toutes les régions</option>
+              <option *ngFor="let region of regions" [value]="region">
+                {{ region }}
+              </option>
+            </select>
+          </div>
+        </form>
+
+        <div class="panel-footer">
+          <button class="reset-link" (click)="resetFilters()">Réinitialiser</button>
+          <div class="stats-badge">
+            <strong>{{ filteredSites.length }}</strong> sites visibles
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Légende Flottante -->
+    <div class="floating-panel legend-panel glass-effect animate-fade-in">
+      <div class="legend-header">Légende</div>
+      <div class="legend-items">
+        <div class="legend-item">
+          <span class="dot pulse-orange"></span>
+          <span>Actif</span>
+        </div>
+        <div class="legend-item">
+          <span class="dot gray"></span>
+          <span>Inactif</span>
+        </div>
+        <div class="legend-item">
+          <span class="dot blue"></span>
+          <span>Maintenance</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

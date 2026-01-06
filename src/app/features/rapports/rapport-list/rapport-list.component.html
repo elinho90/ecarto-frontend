@@ -1,0 +1,162 @@
+<div class="rapport-list-container">
+    <!-- Header -->
+    <div class="list-header">
+        <div class="header-content">
+            <div class="header-title-section">
+                <h1 class="page-title">
+                    <i class="fas fa-file-contract title-icon"></i>
+                    Gestion des Rapports
+                </h1>
+                <p class="page-subtitle">Rapports de faisabilité et analyses techniques</p>
+            </div>
+
+            <div class="header-actions">
+                <app-button variant="secondary" icon="fas fa-sync" size="sm" (clicked)="loadRapports()">
+                    Actualiser
+                </app-button>
+                <app-button variant="primary" icon="fas fa-plus" (clicked)="onAdd()"
+                    *ngIf="hasRole(['ADMINISTRATEUR_SYSTEME', 'CHEF_DE_PROJET', 'ANALYSTE'])">
+                    Nouveau Rapport
+                </app-button>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="list-toolbar">
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" [formControl]="searchControl" placeholder="Rechercher un rapport par nom..."
+                        class="search-input">
+                    <button *ngIf="searchControl.value" class="clear-search" (click)="searchControl.reset()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="list-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Total</span>
+                    <span class="stat-value">{{ totalCount }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Risque Élevé</span>
+                    <span class="stat-value text-red-500">{{ highRiskCount }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Faisabilité Moy.</span>
+                    <span class="stat-value text-blue-500">{{ averageFaisabilite }}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <app-loading *ngIf="isLoading" type="spinner" text="Chargement des rapports..."></app-loading>
+
+    <!-- Reports Grid -->
+    <div *ngIf="!isLoading && rapports.length > 0" class="reports-grid" [@listAnimation]="rapports.length">
+        <div *ngFor="let rapport of rapports" class="report-card">
+            <div class="report-card-header">
+                <div class="report-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <div class="report-risk">
+                    <app-badge [variant]="getRisqueVariant(rapport.risque)" size="sm">
+                        {{ rapport.risque }}
+                    </app-badge>
+                </div>
+            </div>
+
+            <div class="report-card-body">
+                <h3 class="report-title">{{ rapport.nom }}</h3>
+                <p class="report-project">
+                    <i class="fas fa-project-diagram"></i>
+                    {{ rapport.projet?.nom || 'Sans projet' }}
+                </p>
+
+                <div class="report-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>{{ rapport.createdAt | date:'dd/MM/yyyy' }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>{{ rapport.uploadePar }}</span>
+                    </div>
+                </div>
+
+                <div class="report-feasibility">
+                    <div class="feasibility-header">
+                        <span class="label">Indice de faisabilité</span>
+                        <span class="value">{{ rapport.faisabilite }}%</span>
+                    </div>
+                    <div class="feasibility-bar">
+                        <div class="feasibility-fill" [style.width]="rapport.faisabilite + '%'"
+                            [ngClass]="getRisqueVariant(rapport.risque)"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-card-footer">
+                <div class="card-actions">
+                    <button class="action-btn download-btn" (click)="onDownload(rapport.id)" matTooltip="Télécharger">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="action-btn email-btn" (click)="onSendEmail(rapport.id)"
+                        matTooltip="Envoyer par email">
+                        <i class="fas fa-envelope"></i>
+                    </button>
+                    <div class="flex-spacer"></div>
+                    <button class="action-btn edit-btn" (click)="onEdit(rapport)" matTooltip="Modifier"
+                        *ngIf="hasRole(['ADMINISTRATEUR_SYSTEME', 'CHEF_DE_PROJET', 'ANALYSTE'])">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn delete-btn" (click)="onDelete(rapport)" matTooltip="Supprimer"
+                        *ngIf="hasRole(['ADMINISTRATEUR_SYSTEME'])">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && rapports.length === 0" class="empty-state">
+        <div class="empty-icon">
+            <i class="fas fa-file-invoice"></i>
+        </div>
+        <h3>Aucun rapport trouvé</h3>
+        <p>La liste des rapports de faisabilité est vide.</p>
+        <app-button variant="primary" icon="fas fa-plus" (clicked)="onAdd()"
+            *ngIf="hasRole(['ADMINISTRATEUR_SYSTEME', 'CHEF_DE_PROJET', 'ANALYSTE'])">
+            Créer un rapport
+        </app-button>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="!isLoading && rapports.length > 0" class="pagination">
+        <div class="pagination-info">
+            Affichage de <strong>{{ startIndex + 1 }}-{{ endIndex }}</strong> sur <strong>{{ totalCount }}</strong>
+            rapports
+        </div>
+        <div class="pagination-controls">
+            <button class="pagination-btn" [disabled]="currentPage === 1" (click)="previousPage()">
+                <i class="fas fa-chevron-left"></i>
+                Précédent
+            </button>
+
+            <div class="pagination-numbers">
+                <button *ngFor="let page of getPageNumbers()" [class.active]="page === currentPage" class="page-number"
+                    (click)="goToPage(page)">
+                    {{ page }}
+                </button>
+            </div>
+
+            <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
+                Suivant
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>

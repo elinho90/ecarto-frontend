@@ -1,0 +1,23 @@
+<button
+  [class]="buttonClasses.join(' ')"
+  [disabled]="disabled || loading"
+  (click)="onClick($event)"
+  class="btn"
+  [attr.aria-busy]="loading">
+  
+  <div class="btn-content" [class.opacity-0]="loading">
+    <ng-container *ngIf="icon && iconPosition === 'left'">
+      <i class="btn-icon" [class]="icon"></i>
+    </ng-container>
+    
+    <ng-content></ng-content>
+    
+    <ng-container *ngIf="icon && iconPosition === 'right'">
+      <i class="btn-icon" [class]="icon"></i>
+    </ng-container>
+  </div>
+  
+  <div *ngIf="loading" class="btn-loader">
+    <div class="spinner"></div>
+  </div>
+</button>

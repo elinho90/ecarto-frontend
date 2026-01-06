@@ -1,0 +1,140 @@
+// Variables SCSS
+// ============================================
+// PALETTE TECH & IVOIRE - E-CARTO PLATFORM
+// ============================================
+
+// Deep Tech Blue (Secondaire)
+$secondary-900: #1A237E;
+$secondary-800: #283593;
+$secondary-700: #303F9F;
+$secondary-500: #3F51B5;
+
+// Orange Éclatant (Primaire)
+$primary-50: #FFF3E0;
+$primary-100: #FFE0B2;
+$primary-200: #FFCC80;
+$primary-300: #FFB74D;
+$primary-400: #FFA726;
+$primary-500: #FF6F00; // Nouvel Orange Vibrant
+$primary-600: #FB8C00;
+$primary-700: #F57C00;
+$primary-800: #EF6C00;
+$primary-900: #E65100;
+
+// Semantic Colors (Restored for backward compatibility)
+$warning-50: #FFF8E1;
+$warning-100: #FFECB3;
+$warning-500: #FF9800;
+$warning-600: #FB8C00;
+$warning-700: #F57C00;
+
+$error-50: #FFEBEE;
+$error-100: #FFCDD2;
+$error-500: #F44336;
+$error-600: #E53935;
+$error-700: #D32F2F;
+
+$info-50: #E3F2FD;
+$info-100: #BBDEFB;
+$info-500: #2196F3;
+$info-600: #1E88E5;
+$info-700: #1976D2;
+
+// Accent Ivoire (Succès)
+$success-50: #E8F5E9;
+$success-100: #C8E6C9;
+$success-500: #009460;
+$success-600: #007A50;
+$success-700: #005F3E;
+
+// Background & Surface
+$bg-color: #F4F7FE;
+$surface-color: #FFFFFF;
+
+// Neutres (Froid)
+$neutral-25: #FCFDFE;
+$neutral-50: #F8F9FC;
+$neutral-100: #E9ECEF;
+$neutral-200: #DEE2E6;
+$neutral-300: #CED4DA;
+$neutral-400: #ADB5BD;
+$neutral-500: #6C757D;
+$neutral-600: #495057;
+$neutral-700: #343A40;
+$neutral-800: #212529;
+$neutral-900: #1A1D23;
+
+// Dégradés Pro
+$gradient-vibrant: linear-gradient(135deg, #FF8C00 0%, #FF5722 100%);
+$gradient-deep-sea: linear-gradient(135deg, #1A237E 0%, #3F51B5 100%);
+$gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 100%);
+$gradient-primary: $gradient-vibrant;
+$gradient-card: linear-gradient(to bottom, #ffffff, #f8f9fa);
+$gradient-light: linear-gradient(to bottom, #ffffff, #f8f9fa);
+
+// Ombres Douces (Soft UI)
+$shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+$shadow-hover: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+$shadow-floating: 0 15px 35px rgba(26, 35, 126, 0.1);
+
+// Shadow Aliases (Restored)
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow-md: $shadow-soft;
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+$shadow-orange: 0 0 0 3px rgba($primary-500, 0.2);
+
+// Typographie
+$font-sans: 'Poppins', 'Inter', -apple-system, sans-serif;
+
+// Tailles de police
+$text-xs: 0.75rem;
+$text-sm: 0.875rem;
+$text-base: 1rem;
+$text-lg: 1.125rem;
+$text-xl: 1.25rem;
+$text-2xl: 1.5rem;
+$text-3xl: 2rem;
+$text-4xl: 2.5rem;
+
+// Interlignage
+$leading-tight: 1.2;
+$leading-normal: 1.5;
+$leading-relaxed: 1.625;
+$leading-loose: 2;
+
+// Espacements
+$spacing-1: 0.25rem;
+$spacing-2: 0.5rem;
+$spacing-3: 0.75rem;
+$spacing-4: 1rem;
+$spacing-5: 1.25rem;
+$spacing-6: 1.5rem;
+$spacing-8: 2rem;
+$spacing-10: 2.5rem;
+$spacing-12: 3rem;
+
+// Bordures
+$border-radius-sm: 0.5rem;
+$border-radius: 0.75rem;
+$border-radius-md: 1rem;
+$border-radius-lg: 1.25rem;
+$border-radius-xl: 1.5rem;
+$border-radius-full: 9999px;
+
+// Transitions
+$transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+$transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+$transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+// Breakpoints
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;
+
+// Z-indexes
+$z-tooltip: 1070;
+$z-modal: 1060;
+$z-dropdown: 1000;

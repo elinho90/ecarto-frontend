@@ -1,0 +1,42 @@
+<div 
+  class="loading-container"
+  [class.loading-fullscreen]="fullscreen"
+  [class.loading-backdrop]="backdrop">
+  
+  <div class="loading-content">
+    <ng-container [ngSwitch]="type">
+      
+      <!-- Spinner -->
+      <div *ngSwitchCase="'spinner'" class="loading-spinner" [class]="'loading-' + color">
+        <div class="spinner" [style.width]="spinnerSize" [style.height]="spinnerSize"></div>
+        <span *ngIf="text" class="loading-text">{{ text }}</span>
+      </div>
+      
+      <!-- Dots -->
+      <div *ngSwitchCase="'dots'" class="loading-dots" [class]="'loading-' + color">
+        <div class="dot" [style.width]="dotSize" [style.height]="dotSize"></div>
+        <div class="dot" [style.width]="dotSize" [style.height]="dotSize"></div>
+        <div class="dot" [style.width]="dotSize" [style.height]="dotSize"></div>
+        <span *ngIf="text" class="loading-text">{{ text }}</span>
+      </div>
+      
+      <!-- Bars -->
+      <div *ngSwitchCase="'bars'" class="loading-bars" [class]="'loading-' + color">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <span *ngIf="text" class="loading-text">{{ text }}</span>
+      </div>
+      
+      <!-- Skeleton -->
+      <div *ngSwitchCase="'skeleton'" class="loading-skeleton">
+        <div class="skeleton-line" [class.skeleton-line-sm]="size === 'sm'"></div>
+        <div class="skeleton-line" [class.skeleton-line-sm]="size === 'sm'"></div>
+        <div class="skeleton-line skeleton-line-short" [class.skeleton-line-sm]="size === 'sm'"></div>
+        <span *ngIf="text" class="loading-text">{{ text }}</span>
+      </div>
+      
+    </ng-container>
+  </div>
+</div>

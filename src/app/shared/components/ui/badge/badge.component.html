@@ -1,0 +1,16 @@
+<span 
+  class="badge"
+  [class.badge-primary]="variant === 'primary'"
+  [class.badge-success]="variant === 'success'"
+  [class.badge-warning]="variant === 'warning'"
+  [class.badge-error]="variant === 'error'"
+  [class.badge-info]="variant === 'info'"
+  [class.badge-neutral]="variant === 'neutral'"
+  [class.badge-sm]="size === 'sm'"
+  [class.badge-md]="size === 'md'"
+  [class.badge-lg]="size === 'lg'"
+  [class.badge-outline]="outline"
+  [class.badge-dot]="dot">
+  <span class="badge-dot-indicator" *ngIf="dot"></span>
+  <ng-content></ng-content>
+</span>

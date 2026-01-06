@@ -1,0 +1,295 @@
+@use '../../../../scss/variables' as *;
+@use '../../../../scss/theme' as *;
+
+.type-projet-list-container {
+    padding: $spacing-4;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+// Header
+.list-header {
+    margin-bottom: $spacing-8;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-6;
+    margin-bottom: $spacing-6;
+
+    @include respond-to(md) {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+}
+
+.header-title-section {
+    .page-title {
+        font-size: $text-3xl;
+        font-weight: 800;
+        color: $primary-700;
+        margin-bottom: $spacing-2;
+        display: flex;
+        align-items: center;
+        gap: $spacing-3;
+
+        .title-icon {
+            color: $primary-500;
+            font-size: 1.75rem;
+        }
+    }
+
+    .page-subtitle {
+        color: $neutral-600;
+        font-size: $text-lg;
+    }
+}
+
+// Toolbar
+.list-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-4;
+    background: white;
+    border: 1px solid $neutral-100;
+    border-radius: $border-radius-xl;
+    padding: $spacing-4 $spacing-6;
+    box-shadow: $shadow-soft;
+
+    @include respond-to(md) {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+.search-container {
+    flex: 1;
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .search-icon {
+        position: absolute;
+        left: $spacing-4;
+        color: $neutral-400;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: $spacing-3 $spacing-4 $spacing-3 $spacing-10;
+        border: 2px solid $neutral-100;
+        border-radius: $border-radius;
+        font-family: $font-sans;
+        font-size: $text-base;
+        transition: all $transition-base;
+
+        &:focus {
+            outline: none;
+            border-color: $primary-500;
+            box-shadow: $shadow-orange;
+        }
+    }
+
+    .clear-search {
+        position: absolute;
+        right: $spacing-4;
+        background: none;
+        border: none;
+        color: $neutral-400;
+        cursor: pointer;
+    }
+}
+
+.list-stats {
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+
+        .stat-label {
+            font-size: $text-xs;
+            font-weight: 600;
+            color: $neutral-500;
+            text-transform: uppercase;
+            margin-bottom: $spacing-1;
+        }
+
+        .stat-value {
+            font-size: $text-xl;
+            font-weight: 800;
+            color: $primary-700;
+        }
+    }
+}
+
+// Types Grid
+.types-grid {
+    display: grid;
+    gap: $spacing-6;
+    grid-template-columns: repeat(1, 1fr);
+    margin-top: $spacing-8;
+
+    @include respond-to(sm) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include respond-to(lg) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.type-card {
+    background: white;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: $shadow-soft;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    overflow: hidden;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: $shadow-hover !important;
+        border-color: rgba($primary-500, 0.3);
+    }
+
+    &-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: $spacing-5 $spacing-5 0;
+
+        .type-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba($primary-500, 0.1);
+            color: $primary-600;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .type-id {
+            font-size: 10px;
+            font-weight: 700;
+            color: $neutral-400;
+            letter-spacing: 0.1em;
+        }
+    }
+
+    &-body {
+        padding: $spacing-5;
+        flex: 1;
+
+        .type-title {
+            font-size: $text-xl;
+            font-weight: 700;
+            color: $primary-700;
+            margin-bottom: $spacing-3;
+        }
+
+        .type-description {
+            font-size: $text-sm;
+            color: $neutral-600;
+            line-height: $leading-relaxed;
+        }
+    }
+
+    &-footer {
+        padding: $spacing-4 $spacing-5;
+        border-top: 1px solid $neutral-50;
+        background: $neutral-25;
+    }
+}
+
+.card-actions {
+    display: flex;
+    gap: $spacing-2;
+    align-items: center;
+
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all $transition-fast;
+
+        i {
+            font-size: 0.9rem;
+        }
+
+        &.edit-btn {
+            background: #FFF9C4;
+            color: #FBC02D;
+
+            &:hover {
+                background: #FFF176;
+            }
+        }
+
+        &.delete-btn {
+            background: #FFEBEE;
+            color: #E53935;
+
+            &:hover {
+                background: #FFCDD2;
+            }
+        }
+    }
+}
+
+// Empty State
+.empty-state {
+    text-align: center;
+    padding: $spacing-12;
+    border: 2px dashed $neutral-200;
+    border-radius: $border-radius-xl;
+    margin: $spacing-8 0;
+
+    .empty-icon {
+        font-size: 4rem;
+        color: $neutral-200;
+        margin-bottom: $spacing-4;
+    }
+
+    h3 {
+        font-size: $text-xl;
+        font-weight: 700;
+        color: $neutral-700;
+    }
+
+    p {
+        color: $neutral-500;
+        margin-bottom: $spacing-6;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

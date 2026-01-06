@@ -1,0 +1,171 @@
+<div class="form-container">
+    <mat-card class="form-card">
+        <!-- Header -->
+        <div class="card-header">
+            <div class="header-content">
+                <button mat-icon-button class="back-btn" (click)="onCancel()" title="Retour">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+                <div class="header-text">
+                    <h1>{{ isEditMode ? 'Modifier le Projet' : 'Nouveau Projet' }}</h1>
+                    <p>{{ isEditMode ? 'Mise à jour des informations du projet' : 'Remplissez les détails pour créer un
+                        nouveau projet' }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="loading-overlay">
+            <mat-spinner diameter="40"></mat-spinner>
+            <span>Chargement des données...</span>
+        </div>
+
+        <!-- Form Content -->
+        <div *ngIf="!isLoading" class="form-content">
+            <form [formGroup]="projetForm" (ngSubmit)="onSubmit()">
+                <div class="form-grid">
+                    <!-- Nom du Projet -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Nom du Projet</mat-label>
+                        <input matInput formControlName="nom" placeholder="Ex: Déploiement Fibre Optique" required>
+                        <mat-error *ngIf="projetForm.get('nom')?.hasError('required')">Le nom est
+                            obligatoire</mat-error>
+                    </mat-form-field>
+
+                    <!-- Type de Projet -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Type de Projet</mat-label>
+                        <mat-select formControlName="typeProjetId" required>
+                            <mat-option *ngFor="let type of typesProjet" [value]="type.id">
+                                {{ type.nom }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="projetForm.get('typeProjetId')?.hasError('required')">Le type est
+                            obligatoire</mat-error>
+                        <mat-hint>Sélectionnez la catégorie du projet</mat-hint>
+                    </mat-form-field>
+
+                    <!-- Site du Projet -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Site d'Implantation</mat-label>
+                        <mat-select formControlName="siteId" required>
+                            <mat-option *ngFor="let site of sites" [value]="site.id">
+                                {{ site.nom }} ({{ site.ville }})
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="projetForm.get('siteId')?.hasError('required')">Le site est
+                            obligatoire</mat-error>
+                        <mat-hint>Lieu géographique du projet</mat-hint>
+                    </mat-form-field>
+
+                    <!-- Responsable -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Responsable</mat-label>
+                        <input matInput formControlName="responsable" placeholder="Nom du responsable" required>
+                        <mat-error *ngIf="projetForm.get('responsable')?.hasError('required')">Le responsable est
+                            obligatoire</mat-error>
+                    </mat-form-field>
+
+                    <!-- Équipe (Multi-selection) -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Membres de l'Équipe</mat-label>
+                        <mat-select formControlName="equipe" multiple>
+                            <mat-select-trigger>
+                                {{ projetForm.get('equipe')?.value?.[0] || '' }}
+                                <span *ngIf="(projetForm.get('equipe')?.value?.length || 0) > 1"
+                                    class="example-additional-selection">
+                                    (+{{ (projetForm.get('equipe')?.value?.length || 0) - 1 }} {{
+                                    (projetForm.get('equipe')?.value?.length || 0) === 2 ? 'autre' : 'autres' }})
+                                </span>
+                            </mat-select-trigger>
+                            <mat-option *ngFor="let user of utilisateurs" [value]="user.prenom + ' ' + user.nom">
+                                {{ user.prenom }} {{ user.nom }} ({{ user.poste || 'Sans poste' }})
+                            </mat-option>
+                        </mat-select>
+                        <mat-hint>Sélectionnez les membres participant au projet</mat-hint>
+                    </mat-form-field>
+
+                    <!-- Statut -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Statut</mat-label>
+                        <mat-select formControlName="statut">
+                            <mat-option *ngFor="let s of statuts" [value]="s.value">
+                                {{ s.label }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- Priorité -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Priorité</mat-label>
+                        <mat-select formControlName="priorite">
+                            <mat-option *ngFor="let p of priorites" [value]="p.value">
+                                {{ p.label }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- Date Début -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Date de Début</mat-label>
+                        <input matInput [matDatepicker]="startPicker" formControlName="dateDebut" required>
+                        <mat-hint>JJ/MM/AAAA</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #startPicker></mat-datepicker>
+                    </mat-form-field>
+
+                    <!-- Date Fin Prévue -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Date de Fin Prévue</mat-label>
+                        <input matInput [matDatepicker]="endPicker" formControlName="dateFinPrevue">
+                        <mat-hint>JJ/MM/AAAA</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #endPicker></mat-datepicker>
+                    </mat-form-field>
+
+                    <!-- Budget -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Budget (FCFA)</mat-label>
+                        <input matInput type="number" formControlName="budget" placeholder="0.00">
+                        <span matPrefix>💰&nbsp;</span>
+                    </mat-form-field>
+
+                    <!-- Progression -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Progression (%)</mat-label>
+                        <input matInput type="number" formControlName="progression" min="0" max="100">
+                        <span matSuffix>%</span>
+                    </mat-form-field>
+
+                    <!-- Tags -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Tags</mat-label>
+                        <input matInput formControlName="tags"
+                            placeholder="Ex: Fibre, Infrastructure, Urbain (séparés par des virgules)">
+                    </mat-form-field>
+
+                    <!-- Description -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput formControlName="description" rows="4"
+                            placeholder="Description détaillée du projet..."></textarea>
+                    </mat-form-field>
+                </div>
+
+                <!-- Actions -->
+                <div class="form-actions">
+                    <button mat-button type="button" class="cancel-btn" (click)="onCancel()" [disabled]="isSubmitting">
+                        Annuler
+                    </button>
+                    <button mat-raised-button type="submit" class="submit-btn"
+                        [disabled]="projetForm.invalid || isSubmitting">
+                        <mat-icon *ngIf="!isSubmitting">{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+                        <mat-spinner *ngIf="isSubmitting" diameter="20"
+                            style="display: inline-block; margin-right: 8px;"></mat-spinner>
+                        {{ isEditMode ? 'Enregistrer les modifications' : 'Créer le Projet' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</div>

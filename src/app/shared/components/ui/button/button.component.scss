@@ -1,0 +1,116 @@
+@use '../../../../../scss/variables' as *;
+@use '../../../../../scss/theme' as *;
+
+.btn {
+  position: relative;
+  transition: all $transition-base;
+  
+  &-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-2;
+    transition: opacity $transition-fast;
+  }
+  
+  &-icon {
+    font-size: 1.25rem;
+  }
+  
+  &-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    .spinner {
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 2px solid rgba(white, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+  
+  &-primary {
+    @include button-primary;
+    
+    .spinner {
+      border: 2px solid rgba(white, 0.3);
+      border-top-color: white;
+    }
+  }
+  
+  &-secondary {
+    @include button-secondary;
+    
+    .spinner {
+      border: 2px solid rgba($primary-500, 0.3);
+      border-top-color: $primary-500;
+    }
+  }
+  
+  &-ghost {
+    @include button-ghost;
+    
+    .spinner {
+      border: 2px solid rgba($primary-500, 0.3);
+      border-top-color: $primary-500;
+    }
+  }
+  
+  &-danger {
+    background-color: $error-500;
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background-color: darken($error-500, 10%);
+    }
+    
+    .spinner {
+      border: 2px solid rgba(white, 0.3);
+      border-top-color: white;
+    }
+  }
+  
+  &-sm {
+    padding: $spacing-2 $spacing-3;
+    font-size: $text-sm;
+    
+    .btn-icon {
+      font-size: 1rem;
+    }
+    
+    .btn-loader .spinner {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+  
+  &-lg {
+    padding: $spacing-4 $spacing-8;
+    font-size: $text-lg;
+    
+    .btn-icon {
+      font-size: 1.5rem;
+    }
+    
+    .btn-loader .spinner {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+  
+  &-loading {
+    .btn-content {
+      opacity: 0;
+    }
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

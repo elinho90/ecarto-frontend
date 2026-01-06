@@ -1,0 +1,86 @@
+<div class="content-container animate-fade-in">
+    <!-- Actions Header -->
+    <div class="page-actions">
+        <div class="search-bar">
+            <mat-icon>search</mat-icon>
+            <input type="text" placeholder="Rechercher un utilisateur..." (keyup)="applyFilter($event)">
+        </div>
+        <button mat-raised-button class="btn-orange" (click)="onAdd()">
+            <mat-icon>add</mat-icon>
+            Nouvel Utilisateur
+        </button>
+    </div>
+
+    <!-- Table Card -->
+    <div class="card-container">
+        <div class="loading-shade" *ngIf="isLoading">
+            <mat-spinner diameter="40"></mat-spinner>
+        </div>
+
+        <div class="table-container" *ngIf="!isLoading">
+            <table mat-table [dataSource]="dataSource" matSort class="modern-table">
+
+                <!-- Avatar Column -->
+                <ng-container matColumnDef="avatar">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let user">
+                        <div class="user-avatar-sm">
+                            {{ user.prenom?.charAt(0) }}{{ user.nom?.charAt(0) }}
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Nom Column -->
+                <ng-container matColumnDef="nom">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom </th>
+                    <td mat-cell *matCellDef="let user" class="font-medium"> {{ user.nom }} {{ user.prenom }} </td>
+                </ng-container>
+
+                <!-- Email Column -->
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+                    <td mat-cell *matCellDef="let user" class="text-secondary"> {{ user.email }} </td>
+                </ng-container>
+
+                <!-- Role Column -->
+                <ng-container matColumnDef="role">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Rôle </th>
+                    <td mat-cell *matCellDef="let user">
+                        <span class="role-badge" [ngClass]="getRoleClass(user.role)">
+                            {{ formatRole(user.role) }}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let user" class="actions-cell">
+                        <button mat-icon-button class="text-orange" (click)="onEdit(user.id)" matTooltip="Modifier">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" (click)="onDelete(user.id)" matTooltip="Supprimer">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover-row"></tr>
+
+                <!-- Row shown when there is no matching data. -->
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell no-data" colspan="5">
+                        <div class="empty-state">
+                            <mat-icon>people_outline</mat-icon>
+                            <p>Aucun utilisateur trouvé</p>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons
+            aria-label="Select page of users"></mat-paginator>
+    </div>
+</div>

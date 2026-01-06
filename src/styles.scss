@@ -1,0 +1,161 @@
+/* ============================================
+   E-CARTO PLATFORM - TECH & IVOIRE REDESIGN
+   Modern Web Design | Glassmorphism | Animations
+ ============================================ */
+@use '@angular/material' as mat;
+@use './scss/theme' as theme;
+@use './scss/variables' as *;
+
+// Import Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@include mat.core();
+
+// Define the theme object.
+$angular-frontend-theme: mat.define-light-theme((color: (primary: theme.$ecarto-primary,
+        accent: theme.$ecarto-accent,
+        warn: theme.$ecarto-warn,
+      ),
+      typography: theme.$ecarto-typography,
+      density: 0));
+
+// Include theme styles for core and each component used in your app.
+@include mat.all-component-themes($angular-frontend-theme);
+
+/* Reset et base */
+:root {
+  --primary-color: #{$primary-500};
+  --secondary-color: #{$secondary-900};
+  --background-color: #{$bg-color};
+  --surface-color: #{$surface-color};
+  --text-color: #{$neutral-800};
+  --sidebar-width: 280px;
+  --header-height: 80px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: $font-sans;
+  background-color: $bg-color;
+  color: $neutral-800;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $font-sans;
+  font-weight: 700;
+  color: $secondary-900;
+  margin-bottom: 0.5em;
+}
+
+h1 {
+  font-size: $text-4xl;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: $text-3xl;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: $text-2xl;
+}
+
+/* Global Glassmorphism & Cards */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mat-mdc-card {
+  background: $surface-color !important;
+  border-radius: $border-radius-lg !important;
+  box-shadow: $shadow-soft !important;
+  border: none !important;
+  transition: $transition-base;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-hover !important;
+  }
+}
+
+/* Scrollbar Style */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba($primary-500, 0.2);
+  border-radius: 10px;
+
+  &:hover {
+    background: rgba($primary-500, 0.5);
+  }
+}
+
+/* Material Overrides */
+.mat-mdc-button-base {
+  border-radius: $border-radius-sm !important;
+  font-family: $font-sans !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+}
+
+.mat-mdc-raised-button.mat-primary {
+  background-color: $primary-500 !important;
+  box-shadow: 0 4px 14px rgba($primary-500, 0.3) !important;
+}
+
+/* Animations Globales */
+.animate-fade-in {
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Icons & Badges */
+.status-green {
+  color: $success-500;
+}
+
+.status-orange {
+  color: $primary-500;
+}
+
+.status-blue {
+  color: $secondary-900;
+}
+
+/* Fallback Leaflet CSS */
+@import 'leaflet/dist/leaflet.css';

@@ -1,0 +1,142 @@
+<div class="dashboard-wrapper" [class.sidebar-collapsed]="!sidebarOpen">
+  <!-- Sidebar Flottante -->
+  <aside class="sidebar-wrapper">
+    <div class="sidebar-card">
+      <div class="sidebar-header">
+        <a routerLink="/dashboard" style="text-decoration: none; display: block;">
+          <app-logo [showText]="sidebarOpen" [scale]="0.9"></app-logo>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <!-- Section Gestion -->
+        <div class="nav-section">
+          <h4 class="nav-section-title" *ngIf="sidebarOpen">Menu</h4>
+
+          <a routerLink="/dashboard/projets" routerLinkActive="active" class="nav-item"
+            *ngIf="hasRole(['ADMINISTRATEUR_SYSTEME', 'CHEF_DE_PROJET', 'ANALYSTE', 'DEVELOPPEUR'])"
+            [matTooltip]="!sidebarOpen ? 'Projets' : ''" matTooltipPosition="right">
+            <span class="nav-icon-wrapper"><mat-icon>assignment</mat-icon></span>
+            <span class="nav-text" *ngIf="sidebarOpen">Projets</span>
+            <span class="nav-badge" *ngIf="sidebarOpen && dashboardStats.activeProjects > 0">
+              {{ dashboardStats.activeProjects }}
+            </span>
+          </a>
+
+          <a routerLink="/dashboard/sites" routerLinkActive="active" class="nav-item"
+            *ngIf="hasRole(['ADMINISTRATEUR_SYSTEME', 'CHEF_DE_PROJET', 'ANALYSTE'])"
+            [matTooltip]="!sidebarOpen ? 'Sites' : ''" matTooltipPosition="right">
+            <span class="nav-icon-wrapper"><mat-icon>map</mat-icon></span>
+            <span class="nav-text" *ngIf="sidebarOpen">Cartographie</span>
+          </a>
+
+          <a routerLink="/dashboard/rapports" routerLinkActive="active" class="nav-item"
+            *ngIf="hasRole(['ADMINISTRATEUR_SYSTEME', 'CHEF_DE_PROJET', 'DECIDEUR'])"
+            [matTooltip]="!sidebarOpen ? 'Rapport projet' : ''" matTooltipPosition="right">
+            <span class="nav-icon-wrapper"><mat-icon>analytics</mat-icon></span>
+            <span class="nav-text" *ngIf="sidebarOpen">Rapport projet</span>
+          </a>
+        </div>
+
+        <!-- Section Administration -->
+        <div class="nav-section" *ngIf="hasRole(['ADMINISTRATEUR_SYSTEME'])">
+          <h4 class="nav-section-title" *ngIf="sidebarOpen">Système</h4>
+
+          <a routerLink="/dashboard/types-projet" routerLinkActive="active" class="nav-item"
+            [matTooltip]="!sidebarOpen ? 'Types de projet' : ''" matTooltipPosition="right">
+            <span class="nav-icon-wrapper"><mat-icon>category</mat-icon></span>
+            <span class="nav-text" *ngIf="sidebarOpen">Type de projet</span>
+          </a>
+
+          <a routerLink="/dashboard/utilisateurs" routerLinkActive="active" class="nav-item"
+            [matTooltip]="!sidebarOpen ? 'Utilisateurs' : ''" matTooltipPosition="right">
+            <span class="nav-icon-wrapper"><mat-icon>people_outline</mat-icon></span>
+            <span class="nav-text" *ngIf="sidebarOpen">Utilisateurs</span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card" *ngIf="currentUser">
+          <div class="user-avatar-gradient">
+            {{ currentUser.prenom!.charAt(0) }}{{ currentUser.nom!.charAt(0) }}
+          </div>
+          <div class="user-info" *ngIf="sidebarOpen">
+            <span class="user-name">{{ currentUser.prenom }} {{ currentUser.nom }}</span>
+            <span class="user-role">{{ getRoleLabel(currentUser.role) }}</span>
+          </div>
+        </div>
+        <button mat-button class="logout-btn-premium" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span *ngIf="sidebarOpen">Quitter la plateforme</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bouton Toggle flottant -->
+    <button class="floating-toggle" (click)="toggleSidebar()">
+      <mat-icon>{{ sidebarOpen ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+    </button>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="top-header">
+      <div class="header-left">
+        <h1 class="page-title">{{ getPageTitle() }}</h1>
+        <p class="page-subtitle">{{ getPageSubtitle() }}</p>
+      </div>
+
+      <div class="header-right">
+        <button mat-icon-button [matMenuTriggerFor]="notificationMenu" class="notification-btn"
+          matTooltip="Notifications">
+          <mat-icon [matBadge]="dashboardStats.unreadNotifications"
+            [matBadgeHidden]="dashboardStats.unreadNotifications === 0" matBadgeColor="warn">notifications</mat-icon>
+        </button>
+
+        <mat-menu #notificationMenu="matMenu" class="notification-dropdown">
+          <div class="notification-menu-header">
+            <span>Notifications</span>
+            <button mat-button color="primary" (click)="markAllNotificationsAsRead()"
+              *ngIf="dashboardStats.unreadNotifications > 0">
+              Tout marquer comme lu
+            </button>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="notification-items-container">
+            <button mat-menu-item *ngFor="let note of recentNotifications" (click)="markNotificationAsRead(note.id)"
+              [class.unread]="!note.lu" class="notification-item-btn">
+              <div class="notification-item">
+                <div class="notification-icon-container">
+                  <mat-icon>{{ note.lu ? 'notifications_none' : 'notifications_active' }}</mat-icon>
+                </div>
+                <div class="notification-content">
+                  <div class="notification-title">{{ note.titre }}</div>
+                  <div class="notification-message">{{ note.message }}</div>
+                  <div class="notification-time">{{ note.createdAt | date:'shortTime' }}</div>
+                </div>
+              </div>
+            </button>
+            <div class="no-notifications" *ngIf="recentNotifications.length === 0">
+              Aucune notification récente
+            </div>
+          </div>
+        </mat-menu>
+        <div class="date-display">
+          {{ today | date:'fullDate' }}
+        </div>
+      </div>
+    </header>
+
+    <!-- Router Outlet Wrapper -->
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <!-- Watermark -->
+  <div class="platform-watermark">
+    <app-logo [showText]="true" [scale]="2"></app-logo>
+  </div>
+</div>
