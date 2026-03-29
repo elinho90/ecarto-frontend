@@ -15,6 +15,8 @@ export interface Projet {
   progression?: number;
   typeProjetId?: number;
   typeProjetNom?: string;
+  siteId?: number;
+  siteNom?: string;
   equipe?: string[];
   tags?: string;
   // Champs calculés

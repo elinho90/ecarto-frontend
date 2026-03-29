@@ -23,6 +23,12 @@ $angular-frontend-theme: mat.define-light-theme((color: (primary: theme.$ecarto-
 @include mat.all-component-themes($angular-frontend-theme);
 
 /* Reset et base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 :root {
   --primary-color: #{$primary-500};
   --secondary-color: #{$secondary-900};
@@ -45,6 +51,7 @@ body {
   color: $neutral-800;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden; // Prevent horizontal scroll
 }
 
 /* Typography */
@@ -159,3 +166,289 @@ h3 {
 
 /* Fallback Leaflet CSS */
 @import 'leaflet/dist/leaflet.css';
+
+/* ============================================
+   DARK MODE THEME
+   ============================================ */
+[data-theme="dark"] {
+  // CSS Custom Properties for Dark Mode
+  --primary-color: #{$primary-400};
+  --secondary-color: #8B9FD9;
+  --background-color: #0f1419;
+  --surface-color: #1a1d23;
+  --text-color: #f5f7fa;
+  --sidebar-bg: #1a1d23;
+  --card-bg: #22262e;
+  --border-color: #374151;
+
+  // Body
+  background-color: #0f1419;
+  color: #f5f7fa;
+
+  // Material Card Override
+  .mat-mdc-card {
+    background: #22262e !important;
+    border: 1px solid #374151 !important;
+    color: #f5f7fa !important;
+
+    &:hover {
+      box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.4) !important;
+    }
+  }
+
+  // Headers
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: #f5f7fa;
+  }
+
+  // Glassmorphism Dark
+  .glass-effect {
+    background: rgba(26, 29, 35, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  // Dashboard Wrapper
+  .dashboard-wrapper {
+    background: #0f1419;
+  }
+
+  // Sidebar
+  .sidebar-card {
+    background: linear-gradient(180deg, #1a1d23 0%, #22262e 100%) !important;
+    border-color: #374151 !important;
+  }
+
+  .nav-section-title {
+    color: #9aa5b1 !important;
+  }
+
+  .nav-item {
+    color: #9aa5b1 !important;
+
+    &:hover {
+      background: rgba(255, 111, 0, 0.1) !important;
+      color: #f5f7fa !important;
+    }
+
+    &.active {
+      background: rgba(255, 111, 0, 0.15) !important;
+      color: $primary-400 !important;
+    }
+  }
+
+  .user-card {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: #374151 !important;
+  }
+
+  .user-name {
+    color: #f5f7fa !important;
+  }
+
+  .user-role {
+    color: #9aa5b1 !important;
+  }
+
+  .logout-btn-premium {
+    color: #9aa5b1 !important;
+
+    &:hover {
+      background: rgba(244, 67, 54, 0.1) !important;
+      color: #f44336 !important;
+    }
+  }
+
+  // Top Header
+  .top-header {
+    background: rgba(26, 29, 35, 0.9) !important;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #374151 !important;
+  }
+
+  .page-title {
+    color: #f5f7fa !important;
+  }
+
+  .page-subtitle {
+    color: #9aa5b1 !important;
+  }
+
+  .date-display {
+    color: #9aa5b1 !important;
+  }
+
+  // Bento Grid Cards
+  .bento-item {
+    background: #22262e !important;
+    border-color: #374151 !important;
+
+    &:hover {
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+    }
+  }
+
+  .stat-label {
+    color: #9aa5b1 !important;
+  }
+
+  .stat-value {
+    color: #f5f7fa !important;
+  }
+
+  .stat-meta {
+    color: $success-500 !important;
+  }
+
+  .floating-icon {
+    color: #6b7280 !important;
+  }
+
+  .progress-bar {
+    background: #374151 !important;
+  }
+
+  .progress-text {
+    color: #6b7280 !important;
+  }
+
+  // Tables
+  .mat-mdc-table {
+    background: #22262e !important;
+  }
+
+  .mat-mdc-header-row {
+    background: #1a1d23 !important;
+  }
+
+  .mat-mdc-header-cell {
+    color: #9aa5b1 !important;
+    border-bottom-color: #374151 !important;
+  }
+
+  .mat-mdc-row {
+    &:hover {
+      background: rgba(255, 111, 0, 0.05) !important;
+    }
+  }
+
+  .mat-mdc-cell {
+    color: #f5f7fa !important;
+    border-bottom-color: #374151 !important;
+  }
+
+  // Forms
+  .mat-mdc-form-field {
+    .mat-mdc-text-field-wrapper {
+      background: #1a1d23 !important;
+    }
+
+    .mat-mdc-floating-label {
+      color: #9aa5b1 !important;
+    }
+
+    .mat-mdc-input-element {
+      color: #f5f7fa !important;
+    }
+  }
+
+  // Buttons
+  .mat-mdc-button:not(.mat-primary):not(.mat-accent):not(.mat-warn) {
+    color: #f5f7fa !important;
+  }
+
+  .mat-mdc-icon-button {
+    color: #9aa5b1 !important;
+
+    &:hover {
+      color: #f5f7fa !important;
+    }
+  }
+
+  // Dialogs
+  .mat-mdc-dialog-container {
+    background: #22262e !important;
+    color: #f5f7fa !important;
+  }
+
+  // Menus
+  .mat-mdc-menu-panel {
+    background: #22262e !important;
+    border: 1px solid #374151;
+  }
+
+  .mat-mdc-menu-item {
+    color: #f5f7fa !important;
+
+    &:hover {
+      background: rgba(255, 111, 0, 0.1) !important;
+    }
+  }
+
+  // Detail Pages
+  .detail-container {
+    .detail-item {
+      background: #1a1d23 !important;
+
+      .label {
+        color: #9aa5b1 !important;
+      }
+
+      .value {
+        color: #f5f7fa !important;
+      }
+    }
+
+    .team-member-chip {
+      background: #1a1d23 !important;
+      border-color: #374151 !important;
+      color: #f5f7fa !important;
+    }
+  }
+
+  // Scrollbar Dark
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 111, 0, 0.3);
+
+    &:hover {
+      background: rgba(255, 111, 0, 0.5);
+    }
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #1a1d23;
+  }
+
+  // Watermark
+  .platform-watermark {
+    opacity: 0.03;
+  }
+
+  // Map Components
+  .leaflet-container {
+    background: #1a1d23 !important;
+  }
+
+  // Chips and Tags
+  .tag {
+    background: #374151 !important;
+    color: #f5f7fa !important;
+    border-color: #4b5563 !important;
+  }
+
+  // Snackbar
+  .mat-mdc-snack-bar-container {
+    background: #22262e !important;
+    color: #f5f7fa !important;
+  }
+
+  // Tooltip
+  .mat-mdc-tooltip {
+    background: #374151 !important;
+    color: #f5f7fa !important;
+  }
+}

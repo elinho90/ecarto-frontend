@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Projet } from '../../../shared/models/projet.model';
@@ -8,7 +8,7 @@ import { Page } from '../../../shared/models/page.model';
   providedIn: 'root'
 })
 export class ProjetService {
-  private readonly API_URL = 'http://localhost:8080/api/projets';
+  private readonly API_URL = 'http://localhost:8080/api/v1/projets';
 
   constructor(private http: HttpClient) { }
 
@@ -39,6 +39,10 @@ export class ProjetService {
     return this.http.get(`${this.API_URL}/${id}/report`, { responseType: 'blob' });
   }
 
+  exportProjetsExcel(): Observable<Blob> {
+    return this.http.get(`http://localhost:8080/api/v1/export/projets/excel`, { responseType: 'blob' });
+  }
+
   sendReport(id: number, email: string): Observable<any> {
     return this.http.post<any>(`${this.API_URL}/${id}/report/send?email=${email}`, {});
   }
@@ -62,5 +66,28 @@ export class ProjetService {
 
   updateProjectProgress(id: number, progress: number): Observable<Projet> {
     return this.http.patch<Projet>(`${this.API_URL}/${id}/progression?progress=${progress}`, {});
+  }
+
+  getProjectsByStatus(status: string, page: number = 0, size: number = 10): Observable<Page<Projet>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<Page<Projet>>(`${this.API_URL}/status/${status}`, { params });
+  }
+
+  getProjectEvolution(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.API_URL}/evolution`);
+  }
+
+  getProjectsByTypeStats(): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}/stats-by-type`);
+  }
+
+  getBudgetStatisticsByStatus(): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}/budget-statistics`);
+  }
+
+  getProjectStatistics(): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}/statistics`);
   }
 }

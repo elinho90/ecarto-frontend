@@ -9,10 +9,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { ProjetService } from '../services/projet.service';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { SharedModule } from '../../../shared/shared.module';
+import { KanbanBoardComponent } from '../../../shared/components/kanban/kanban-board.component';
+
+import { SuiviWorkflowComponent } from './suivi-workflow.component';
+import { ProjetDocumentsComponent } from './projet-documents.component';
 
 @Component({
   selector: 'app-projet-detail',
@@ -27,9 +32,13 @@ import { SharedModule } from '../../../shared/shared.module';
     MatDividerModule,
     MatTooltipModule,
     MatSnackBarModule,
+    MatTabsModule,
     ButtonComponent,
     SharedModule,
-    FormsModule
+    FormsModule,
+    KanbanBoardComponent,
+    SuiviWorkflowComponent,
+    ProjetDocumentsComponent
   ],
   template: `
     <div class="detail-container animate-fade-in" *ngIf="!isLoading; else loading">
@@ -55,139 +64,189 @@ import { SharedModule } from '../../../shared/shared.module';
         </div>
       </div>
 
-      <div class="grid grid-cols-3 gap-6">
-        <!-- Main Info -->
-        <div class="col-span-2 space-y-6">
-          <mat-card class="info-card">
-            <mat-card-header>
-              <mat-icon mat-card-avatar color="primary">description</mat-icon>
-              <mat-card-title>Description et Détails</mat-card-title>
-            </mat-card-header>
-            <mat-card-content class="pt-4">
-              <p class="text-gray-700 leading-relaxed mb-6">{{ projet?.description || 'Aucune description fournie.' }}</p>
-              
-              <div class="grid grid-cols-2 gap-4">
-                <div class="detail-item">
-                  <span class="label">Responsable</span>
-                  <span class="value font-semibold">{{ projet?.responsable }}</span>
-                </div>
-                <div class="detail-item">
-                  <span class="label">Type de Projet</span>
-                  <span class="value">{{ projet?.typeProjetNom || 'Non spécifié' }}</span>
-                </div>
-                <div class="detail-item">
-                  <span class="label">Site</span>
-                  <span class="value">{{ projet?.siteNom || 'Non spécifié' }}</span>
-                </div>
-                <div class="detail-item">
-                  <span class="label">Priorité</span>
-                  <app-badge [variant]="getPriorityVariant(projet?.priorite!)" size="sm">{{ projet?.priorite }}</app-badge>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-
-          <mat-card class="team-card">
-            <mat-card-header>
-              <mat-icon mat-card-avatar color="accent">group</mat-icon>
-              <mat-card-title>Équipe du Projet</mat-card-title>
-            </mat-card-header>
-            <mat-card-content class="pt-4">
-              <div class="flex flex-wrap gap-4">
-                <div *ngFor="let member of projet?.equipe" class="team-member-chip">
-                   <div class="avatar">{{ member.charAt(0) }}</div>
-                   <span>{{ member }}</span>
-                </div>
-                <div *ngIf="!projet?.equipe || projet?.equipe?.length === 0" class="text-gray-400 italic">
-                  Aucun membre assigné.
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-
-        <!-- Sidebar Info -->
-        <div class="space-y-6">
-          <mat-card class="progress-card bg-orange-50">
-            <mat-card-content class="pt-6">
-              <div class="text-center">
-                <div class="flex justify-between items-center mb-1">
-                  <span class="text-xs text-orange-600 font-bold uppercase tracking-wider">Progression</span>
-                  <button mat-icon-button color="primary" (click)="toggleEditProgress()" *ngIf="!isEditingProgress" size="small">
-                    <mat-icon style="font-size: 18px;">edit</mat-icon>
-                  </button>
-                </div>
-                
-                <div *ngIf="!isEditingProgress">
-                  <div class="text-5xl font-black text-orange-500 my-2">{{ projet?.progression }}%</div>
-                  <div class="w-full bg-orange-200 rounded-full h-3 mt-4">
-                    <div class="bg-orange-500 h-3 rounded-full shadow-sm transition-all duration-500" [style.width]="projet?.progression + '%'"></div>
-                  </div>
-                </div>
-
-                <div *ngIf="isEditingProgress" class="py-4 px-2 animate-fade-in">
-                  <input type="range" class="w-full h-2 bg-orange-200 rounded-lg appearance-none cursor-pointer accent-orange-500" 
-                         [(ngModel)]="tempProgress" min="0" max="100">
-                  <div class="flex justify-between items-center mt-4">
-                    <span class="text-2xl font-bold text-orange-600">{{ tempProgress }}%</span>
-                    <div class="flex gap-2">
-                       <button mat-icon-button color="warn" (click)="toggleEditProgress()">
-                         <mat-icon>close</mat-icon>
-                       </button>
-                       <button mat-icon-button color="primary" (click)="saveProgress()">
-                         <mat-icon>check</mat-icon>
-                       </button>
+      <!-- Tabs -->
+      <mat-tab-group class="project-tabs" animationDuration="200ms">
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">info</mat-icon>
+            Détails
+          </ng-template>
+          
+          <div class="tab-content">
+            <div class="grid grid-cols-3 gap-6">
+              <!-- Main Info -->
+              <div class="col-span-2 space-y-6">
+                <mat-card class="info-card">
+                  <mat-card-header>
+                    <mat-icon mat-card-avatar color="primary">description</mat-icon>
+                    <mat-card-title>Description et Détails</mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content class="pt-4">
+                    <p class="text-gray-700 leading-relaxed mb-6">{{ projet?.description || 'Aucune description fournie.' }}</p>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                      <div class="detail-item">
+                        <span class="label">Responsable</span>
+                        <span class="value font-semibold">{{ projet?.responsable }}</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="label">Type de Projet</span>
+                        <span class="value">{{ projet?.typeProjetNom || 'Non spécifié' }}</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="label">Site</span>
+                        <span class="value">{{ projet?.siteNom || 'Non spécifié' }}</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="label">Priorité</span>
+                        <app-badge [variant]="getPriorityVariant(projet?.priorite!)" size="sm">{{ projet?.priorite }}</app-badge>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
+                  </mat-card-content>
+                </mat-card>
 
-          <mat-card class="budget-card">
-            <mat-card-content class="pt-6">
-              <div class="flex items-center gap-4">
-                <div class="icon-box bg-blue-50 text-blue-600">
-                  <mat-icon>payments</mat-icon>
-                </div>
-                <div>
-                  <span class="text-sm text-gray-500 block">Budget Alloué</span>
-                  <span class="text-2xl font-bold text-gray-900">{{ (projet?.budget || 0).toLocaleString() }} FCFA</span>
-                </div>
+                <mat-card class="team-card">
+                  <mat-card-header>
+                    <mat-icon mat-card-avatar color="accent">group</mat-icon>
+                    <mat-card-title>Équipe du Projet</mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content class="pt-4">
+                    <div class="flex flex-wrap gap-4">
+                      <div *ngFor="let member of projet?.equipe" class="team-member-chip">
+                         <div class="avatar">{{ member.charAt(0) }}</div>
+                         <span>{{ member }}</span>
+                      </div>
+                      <div *ngIf="!projet?.equipe || projet?.equipe?.length === 0" class="text-gray-400 italic">
+                        Aucun membre assigné.
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
               </div>
-              
-              <mat-divider class="my-4"></mat-divider>
-              
-              <div class="space-y-3">
-                <div class="flex justify-between">
-                  <span class="text-sm text-gray-500">Date Début</span>
-                  <span class="text-sm font-medium">{{ projet?.dateDebut | date:'dd/MM/yyyy' }}</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-sm text-gray-500">Fin Prévue</span>
-                  <span class="text-sm font-medium">{{ projet?.dateFinPrevue | date:'dd/MM/yyyy' }}</span>
-                </div>
-                <div class="flex justify-between" *ngIf="projet?.dateFinReelle">
-                   <span class="text-sm text-gray-500">Fin Réelle</span>
-                   <span class="text-sm font-medium text-green-600">{{ projet?.dateFinReelle | date:'dd/MM/yyyy' }}</span>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
 
-          <mat-card class="tags-card">
-            <mat-card-header>
-              <mat-card-title class="text-base">Mots-clés</mat-card-title>
-            </mat-card-header>
-            <mat-card-content class="pt-2">
-              <div class="flex flex-wrap gap-2">
-                <span *ngFor="let tag of getTags()" class="tag">{{ tag }}</span>
-                <span *ngIf="!projet?.tags" class="text-gray-400 text-sm">Aucun tag</span>
+              <!-- Sidebar Info -->
+              <div class="space-y-6">
+                <mat-card class="progress-card bg-orange-50">
+                  <mat-card-content class="pt-6">
+                    <div class="text-center">
+                      <div class="flex justify-between items-center mb-1">
+                        <span class="text-xs text-orange-600 font-bold uppercase tracking-wider">Progression</span>
+                        <button mat-icon-button color="primary" (click)="toggleEditProgress()" *ngIf="!isEditingProgress" size="small">
+                          <mat-icon style="font-size: 18px;">edit</mat-icon>
+                        </button>
+                      </div>
+                      
+                      <div *ngIf="!isEditingProgress">
+                        <div class="text-5xl font-black text-orange-500 my-2">{{ projet?.progression }}%</div>
+                        <div class="w-full bg-orange-200 rounded-full h-3 mt-4">
+                          <div class="bg-orange-500 h-3 rounded-full shadow-sm transition-all duration-500" [style.width]="projet?.progression + '%'"></div>
+                        </div>
+                      </div>
+
+                      <div *ngIf="isEditingProgress" class="py-4 px-2 animate-fade-in">
+                        <input type="range" class="w-full h-2 bg-orange-200 rounded-lg appearance-none cursor-pointer accent-orange-500" 
+                               [(ngModel)]="tempProgress" min="0" max="100">
+                        <div class="flex justify-between items-center mt-4">
+                          <span class="text-2xl font-bold text-orange-600">{{ tempProgress }}%</span>
+                          <div class="flex gap-2">
+                             <button mat-icon-button color="warn" (click)="toggleEditProgress()">
+                               <mat-icon>close</mat-icon>
+                             </button>
+                             <button mat-icon-button color="primary" (click)="saveProgress()">
+                               <mat-icon>check</mat-icon>
+                             </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+
+                <mat-card class="budget-card">
+                  <mat-card-content class="pt-6">
+                    <div class="flex items-center gap-4">
+                      <div class="icon-box bg-blue-50 text-blue-600">
+                        <mat-icon>payments</mat-icon>
+                      </div>
+                      <div>
+                        <span class="text-sm text-gray-500 block">Budget Alloué</span>
+                        <span class="text-2xl font-bold text-gray-900">{{ (projet?.budget || 0).toLocaleString() }} FCFA</span>
+                      </div>
+                    </div>
+                    
+                    <mat-divider class="my-4"></mat-divider>
+                    
+                    <div class="space-y-3">
+                      <div class="flex justify-between">
+                        <span class="text-sm text-gray-500">Date Début</span>
+                        <span class="text-sm font-medium">{{ projet?.dateDebut | date:'dd/MM/yyyy' }}</span>
+                      </div>
+                      <div class="flex justify-between">
+                        <span class="text-sm text-gray-500">Fin Prévue</span>
+                        <span class="text-sm font-medium">{{ projet?.dateFinPrevue | date:'dd/MM/yyyy' }}</span>
+                      </div>
+                      <div class="flex justify-between" *ngIf="projet?.dateFinReelle">
+                         <span class="text-sm text-gray-500">Fin Réelle</span>
+                         <span class="text-sm font-medium text-green-600">{{ projet?.dateFinReelle | date:'dd/MM/yyyy' }}</span>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+
+                <mat-card class="tags-card">
+                  <mat-card-header>
+                    <mat-card-title class="text-base">Mots-clés</mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content class="pt-2">
+                    <div class="flex flex-wrap gap-2">
+                      <span *ngFor="let tag of getTags()" class="tag">{{ tag }}</span>
+                      <span *ngIf="!projet?.tags" class="text-gray-400 text-sm">Aucun tag</span>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
               </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">view_column</mat-icon>
+            Kanban
+          </ng-template>
+          
+          <div class="tab-content">
+            <app-kanban-board 
+              [projetId]="projet?.id" 
+              (taskUpdated)="loadProjet(projet?.id)">
+            </app-kanban-board>
+          </div>
+        </mat-tab>
+
+        <!-- NOUVEL ONGLET : SUIVI TEMPS RÉEL -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon text-blue-500">timeline</mat-icon>
+            Suivi &amp; Workflow
+          </ng-template>
+          
+          <div class="tab-content p-4">
+            <app-suivi-workflow *ngIf="projet?.id" [projetId]="projet.id"></app-suivi-workflow>
+          </div>
+        </mat-tab>
+
+        <!-- NOUVEL ONGLET : GESTION DOCUMENTAIRE -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon text-indigo-500">folder_open</mat-icon>
+            Base Documentaire
+          </ng-template>
+          
+          <div class="tab-content p-4">
+            <app-projet-documents *ngIf="projet?.id" [projetId]="projet.id"></app-projet-documents>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
     </div>
 
     <ng-template #loading>

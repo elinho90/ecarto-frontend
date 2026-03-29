@@ -9,6 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { TypeProjetService } from '../services/type-projet.service';
 import { TypeProjet } from '../../../shared/models/type-projet.model';
@@ -27,7 +29,9 @@ import { Role } from '../../../shared/enums/role.enum';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatSelectModule,
+    MatSlideToggleModule
   ],
   template: `
     <div class="type-projet-form-container p-6">
@@ -49,6 +53,12 @@ import { Role } from '../../../shared/enums/role.enum';
               </mat-error>
             </mat-form-field>
 
+            <!-- Libellé -->
+            <mat-form-field class="w-full">
+              <mat-label>Libellé</mat-label>
+              <input matInput formControlName="libelle" placeholder="Libellé affiché">
+            </mat-form-field>
+
             <!-- Description -->
             <mat-form-field class="w-full">
               <mat-label>Description</mat-label>
@@ -56,6 +66,43 @@ import { Role } from '../../../shared/enums/role.enum';
                         placeholder="Décrivez le type de projet"
                         rows="4"></textarea>
             </mat-form-field>
+
+            <!-- Couleur -->
+            <mat-form-field class="w-full">
+              <mat-label>Couleur</mat-label>
+              <mat-select formControlName="couleur">
+                <mat-option value="#FF8C00">🟠 Orange</mat-option>
+                <mat-option value="#1A237E">🔵 Bleu Marine</mat-option>
+                <mat-option value="#4CAF50">🟢 Vert</mat-option>
+                <mat-option value="#F44336">🔴 Rouge</mat-option>
+                <mat-option value="#9C27B0">🟣 Violet</mat-option>
+                <mat-option value="#00BCD4">🔵 Cyan</mat-option>
+                <mat-option value="#795548">🟤 Marron</mat-option>
+                <mat-option value="#607D8B">⚫ Gris</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <!-- Icône -->
+            <mat-form-field class="w-full">
+              <mat-label>Icône</mat-label>
+              <mat-select formControlName="icone">
+                <mat-option value="folder">📁 Dossier</mat-option>
+                <mat-option value="build">🔧 Construction</mat-option>
+                <mat-option value="settings">⚙️ Paramètres</mat-option>
+                <mat-option value="code">💻 Code</mat-option>
+                <mat-option value="cloud">☁️ Cloud</mat-option>
+                <mat-option value="security">🔒 Sécurité</mat-option>
+                <mat-option value="analytics">📊 Analytique</mat-option>
+                <mat-option value="support">🎧 Support</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <!-- Actif -->
+            <div class="py-4">
+              <mat-slide-toggle formControlName="estActif" color="primary">
+                Type actif
+              </mat-slide-toggle>
+            </div>
 
             <!-- Boutons -->
             <div class="flex gap-4 mt-6">
@@ -106,7 +153,11 @@ export class TypeProjetFormComponent implements OnInit {
   constructor() {
     this.typeForm = this.fb.group({
       nom: ['', [Validators.required]],
-      description: ['']
+      libelle: [''],
+      description: [''],
+      couleur: ['#FF8C00'],
+      icone: ['folder'],
+      estActif: [true]
     });
   }
 
@@ -134,7 +185,7 @@ export class TypeProjetFormComponent implements OnInit {
 
   loadType(): void {
     if (!this.typeId) return;
-    
+
     this.isLoading = true;
     this.typeProjetService.getTypeProjetById(this.typeId).subscribe({
       next: (type) => {

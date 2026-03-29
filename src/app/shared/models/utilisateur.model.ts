@@ -10,6 +10,7 @@ export interface Utilisateur {
   telephone?: string;
   departement?: string;
   poste?: string;
+  dashboardConfig?: string;
   actif: boolean;
   createdAt?: Date | string;
   updatedAt?: Date | string;

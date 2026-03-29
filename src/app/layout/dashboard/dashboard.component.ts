@@ -16,6 +16,7 @@ import { Utilisateur } from '../../shared/models/utilisateur.model';
 import { Role } from '../../shared/enums/role.enum';
 import { SharedModule } from '../../shared/shared.module';
 import { NotificationService, Notification } from '../../shared/services/notification.service';
+import { ThemeService } from '../../shared/services/theme.service';
 
 interface DashboardStats {
   projectsCount: number;
@@ -60,6 +61,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private authService = inject(AuthService);
   private notificationService = inject(NotificationService);
+  public themeService = inject(ThemeService);
   private breakpointObserver = inject(BreakpointObserver);
   private routerSubscription?: Subscription;
   private notificationSubscription?: Subscription;
@@ -111,6 +113,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   toggleSidebar(): void {
     this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
   }
 
   logout(): void {
@@ -201,6 +207,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         return 'Consultez les rapports et statistiques';
       case 'types-projet':
         return 'Gérez les types de projet';
+      case 'comites':
+        return 'Organisez les comités de pilotage';
+      case 'entites':
+        return 'Gérez les entités commanditaires du groupe';
       case 'utilisateurs':
         return 'Administrez les utilisateurs de la plateforme';
       default:

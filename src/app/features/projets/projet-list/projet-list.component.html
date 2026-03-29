@@ -11,6 +11,10 @@
       </div>
 
       <div class="header-actions">
+        <app-button variant="ghost" icon="fas fa-file-excel" size="sm" (clicked)="exportToExcel()">
+          Export Excel
+        </app-button>
+
         <app-button variant="ghost" icon="fas fa-filter" size="sm" (clicked)="openFilters()">
           Filtres
           <app-badge *ngIf="activeFiltersCount" variant="primary" size="sm">

@@ -19,6 +19,7 @@ import { ProjetFilterDialogComponent } from './projet-filter-dialog.component';
 
 // Services
 import { ProjetService } from '../services/projet.service';
+import { ExportService } from '../../../shared/services/export.service';
 import { Projet } from '../../../shared/models/projet.model';
 
 // Enums
@@ -74,6 +75,7 @@ export class ProjetListComponent implements OnInit {
   totalPages = 1;
 
   private projetService = inject(ProjetService);
+  private exportService = inject(ExportService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
@@ -91,12 +93,12 @@ export class ProjetListComponent implements OnInit {
 
   loadProjets(): void {
     this.isLoading = true;
-    const search = this.searchControl.value;
+    const search = this.searchControl.value?.trim();
 
     const obs = search || this.selectedStatut || this.selectedPriorite
       ? this.projetService.searchProjects({
-        nom: search,
-        statut: this.selectedStatut
+        nom: search || undefined,
+        statut: this.selectedStatut || undefined
       }, this.currentPage - 1, this.itemsPerPage)
       : this.projetService.getAllProjets(this.currentPage - 1, this.itemsPerPage);
 
@@ -279,5 +281,27 @@ export class ProjetListComponent implements OnInit {
         }
       });
     }
+  }
+
+  exportToExcel(): void {
+    this.isLoading = true;
+    this.projetService.exportProjetsExcel().subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'projets_export.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.isLoading = false;
+        this.snackBar.open('Export Excel généré avec succès depuis le serveur', 'Fermer', { duration: 3000 });
+      },
+      error: () => {
+        this.isLoading = false;
+        this.snackBar.open('Erreur lors de l\'export serveur', 'Fermer', { duration: 3000 });
+      }
+    });
   }
 }

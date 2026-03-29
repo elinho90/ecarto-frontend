@@ -1,0 +1,72 @@
+flowchart LR
+    subgraph Acteurs
+        A1["Administrateur Systeme"]
+        A2["Chef de Projet"]
+        A3["Analyste"]
+        A4["Developpeur"]
+        A5["Decideur"]
+    end
+
+    subgraph Authentification
+        UC1["Se connecter JWT"]
+        UC2["Se deconnecter"]
+        UC3["Modifier son profil"]
+    end
+
+    subgraph Gestion_Projets["Gestion des Projets"]
+        UC4["Creer un projet"]
+        UC5["Consulter les projets"]
+        UC6["Modifier un projet"]
+        UC7["Supprimer un projet"]
+        UC8["Exporter en Excel"]
+    end
+
+    subgraph Cartographie
+        UC9["Visualiser la carte"]
+        UC10["Ajouter un site"]
+        UC11["Filtrer les sites"]
+        UC12["Voir details site"]
+        UC13["Carte de chaleur"]
+        UC14["Mesurer distance"]
+    end
+
+    subgraph Rapports
+        UC15["Consulter rapport"]
+        UC16["Generer rapport"]
+    end
+
+    subgraph Administration
+        UC17["Gerer utilisateurs"]
+        UC18["Gerer types projet"]
+        UC19["Gerer notifications"]
+    end
+
+    subgraph Dashboard["Tableau de Bord"]
+        UC20["Consulter KPIs"]
+        UC21["Voir graphiques"]
+    end
+
+    A1 --> UC1 & UC2 & UC3
+    A1 --> UC4 & UC5 & UC6 & UC7 & UC8
+    A1 --> UC9 & UC10 & UC11 & UC12 & UC13 & UC14
+    A1 --> UC15 & UC16
+    A1 --> UC17 & UC18 & UC19
+    A1 --> UC20 & UC21
+
+    A2 --> UC1 & UC3
+    A2 --> UC4 & UC5 & UC6 & UC8
+    A2 --> UC9 & UC10 & UC11 & UC12
+    A2 --> UC15 & UC16
+    A2 --> UC20 & UC21
+
+    A3 --> UC1 & UC3
+    A3 --> UC5 & UC8
+    A3 --> UC9 & UC11 & UC12 & UC13 & UC14
+    A3 --> UC20 & UC21
+
+    A4 --> UC1 & UC3
+    A4 --> UC5
+
+    A5 --> UC1 & UC3
+    A5 --> UC15 & UC16
+    A5 --> UC20 & UC21

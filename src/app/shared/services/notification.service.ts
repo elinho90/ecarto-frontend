@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+﻿import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap, switchMap, timer } from 'rxjs';
 import { Page } from '../models/page.model';
@@ -17,7 +17,7 @@ export interface Notification {
     providedIn: 'root'
 })
 export class NotificationService {
-    private readonly API_URL = 'http://localhost:8080/api/notifications';
+    private readonly API_URL = 'http://localhost:8080/api/v1/notifications';
     private http = inject(HttpClient);
 
     private unreadCountSubject = new BehaviorSubject<number>(0);
@@ -78,3 +78,4 @@ export class NotificationService {
         );
     }
 }
+

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Diagramme de Cas d'Utilisation - E-Carto</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background: white;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #1A237E;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            color: #455a64;
+            font-size: 16px;
+            font-weight: 400;
+            margin-top: 0;
+        }
+
+        .mermaid {
+            width: 100%;
+            max-width: 1200px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Diagramme de Cas d'Utilisation — E-Carto GS2E</h1>
+    <h2>Plateforme de Cartographie des Systèmes d'Information</h2>
+    <div class="mermaid">
+        flowchart LR
+        subgraph Acteurs
+        A1["🧑‍💼 Administrateur<br />Système"]
+        A2["👷 Chef de<br />Projet"]
+        A3["📊 Analyste"]
+        A4["💻 Développeur"]
+        A5["🏛️ Décideur"]
+        end
+
+        subgraph UC_Auth["🔐 Authentification"]
+        UC1["Se connecter<br />(JWT)"]
+        UC2["Se déconnecter"]
+        UC3["Modifier son profil"]
+        end
+
+        subgraph UC_Projets["📁 Gestion des Projets"]
+        UC4["Créer un projet"]
+        UC5["Consulter la liste<br />des projets"]
+        UC6["Modifier un projet"]
+        UC7["Supprimer un projet"]
+        UC8["Exporter en Excel"]
+        end
+
+        subgraph UC_Sites["🗺️ Cartographie"]
+        UC9["Visualiser la carte<br />interactive"]
+        UC10["Ajouter un site"]
+        UC11["Filtrer les sites<br />par statut/type/région"]
+        UC12["Voir détails d'un site"]
+        UC13["Activer carte de chaleur"]
+        UC14["Mesurer une distance"]
+        end
+
+        subgraph UC_Rapports["📈 Rapports"]
+        UC15["Consulter le rapport<br />d'un projet"]
+        UC16["Générer un rapport"]
+        end
+
+        subgraph UC_Admin["⚙️ Administration"]
+        UC17["Gérer les utilisateurs"]
+        UC18["Gérer les types<br />de projet"]
+        UC19["Gérer les notifications"]
+        end
+
+        subgraph UC_Dashboard["📊 Tableau de Bord"]
+        UC20["Consulter les KPIs"]
+        UC21["Voir les graphiques<br />statistiques"]
+        end
+
+        A1 --> UC1 & UC2 & UC3
+        A1 --> UC4 & UC5 & UC6 & UC7 & UC8
+        A1 --> UC9 & UC10 & UC11 & UC12 & UC13 & UC14
+        A1 --> UC15 & UC16
+        A1 --> UC17 & UC18 & UC19
+        A1 --> UC20 & UC21
+
+        A2 --> UC1 & UC3
+        A2 --> UC4 & UC5 & UC6 & UC8
+        A2 --> UC9 & UC10 & UC11 & UC12
+        A2 --> UC15 & UC16
+        A2 --> UC20 & UC21
+
+        A3 --> UC1 & UC3
+        A3 --> UC5 & UC8
+        A3 --> UC9 & UC11 & UC12 & UC13 & UC14
+        A3 --> UC20 & UC21
+
+        A4 --> UC1 & UC3
+        A4 --> UC5
+
+        A5 --> UC1 & UC3
+        A5 --> UC15 & UC16
+        A5 --> UC20 & UC21
+    </div>
+    <script>mermaid.initialize({ startOnLoad: true, theme: 'default', flowchart: { htmlLabels: true, curve: 'basis' } });</script>
+</body>
+
+</html>

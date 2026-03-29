@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Wireframes - E-Carto</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: white;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            padding: 40px;
+        }
+
+        .page-title {
+            color: #1A237E;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .page-subtitle {
+            color: #455a64;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .wireframe {
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #fafafa;
+        }
+
+        .wireframe-label {
+            background: #1A237E;
+            color: white;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .wireframe-content {
+            padding: 20px;
+            min-height: 320px;
+            position: relative;
+        }
+
+        /* LOGIN */
+        .login-bg {
+            background: linear-gradient(135deg, #1A237E 0%, #283593 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 30px;
+            width: 260px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-card .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1A237E;
+            margin-bottom: 20px;
+        }
+
+        .login-card .logo span {
+            color: #FF6F00;
+        }
+
+        .field {
+            background: #f0f0f0;
+            border-radius: 8px;
+            height: 36px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .login-btn {
+            background: #FF6F00;
+            color: white;
+            border-radius: 8px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* DASHBOARD */
+        .dash {
+            display: flex;
+            gap: 0;
+            height: 100%;
+        }
+
+        .sidebar {
+            width: 70px;
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar .s-logo {
+            font-size: 10px;
+            font-weight: 700;
+            color: #1A237E;
+            margin-bottom: 10px;
+        }
+
+        .sidebar .s-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .sidebar .s-item.active {
+            background: linear-gradient(135deg, #FF6F00, #FF8F00);
+            color: white;
+        }
+
+        .dash-main {
+            flex: 1;
+            padding: 12px;
+            overflow: hidden;
+        }
+
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .dash-header h4 {
+            font-size: 14px;
+            color: #1A237E;
+        }
+
+        .dash-header .header-right {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .dash-header .icon-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .kpi {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            border-left: 3px solid;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+        }
+
+        .kpi .kpi-label {
+            font-size: 9px;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        .kpi .kpi-val {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1A237E;
+        }
+
+        .kpi:nth-child(1) {
+            border-left-color: #1A237E;
+        }
+
+        .kpi:nth-child(2) {
+            border-left-color: #009460;
+        }
+
+        .kpi:nth-child(3) {
+            border-left-color: #FF6F00;
+        }
+
+        .kpi:nth-child(4) {
+            border-left-color: #2196F3;
+        }
+
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .chart-box {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            height: 100px;
+        }
+
+        .chart-box h5 {
+            font-size: 10px;
+            color: #1A237E;
+            margin-bottom: 8px;
+        }
+
+        .chart-placeholder {
+            height: 60px;
+            background: linear-gradient(135deg, #e3f2fd, #fff3e0);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 20px;
+        }
+
+        /* MAP */
+        .map-layout {
+            display: flex;
+            gap: 0;
+            height: 100%;
+        }
+
+        .map-filters {
+            width: 150px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 2;
+        }
+
+        .map-filters h5 {
+            color: #FF6F00;
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+
+        .filter-field {
+            background: #f5f5f5;
+            border-radius: 6px;
+            height: 28px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .map-area {
+            flex: 1;
+            background: linear-gradient(135deg, #e8f5e9 0%, #fff8e1 50%, #e3f2fd 100%);
+            border-radius: 12px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-area .map-text {
+            color: #999;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .marker {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .marker.green {
+            background: #2E7D32;
+        }
+
+        .marker.red {
+            background: #C62828;
+        }
+
+        .marker.blue {
+            background: #0277BD;
+        }
+
+        .marker.orange {
+            background: #F57C00;
+        }
+
+        .legend-box {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+
+        .legend-box h5 {
+            font-size: 10px;
+            margin-bottom: 6px;
+            color: #1A237E;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 9px;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .stats-badge {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: #FF6F00;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        /* PROJECTS */
+        .proj-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .proj-header h4 {
+            font-size: 14px;
+            color: #1A237E;
+        }
+
+        .proj-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-outline {
+            border: 1px solid #FF6F00;
+            color: #FF6F00;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            background: white;
+        }
+
+        .btn-solid {
+            background: #FF6F00;
+            color: white;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            border: none;
+        }
+
+        .search-bar {
+            background: #f5f5f5;
+            border-radius: 8px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        th {
+            text-align: left;
+            padding: 8px 6px;
+            color: #999;
+            font-weight: 600;
+            border-bottom: 2px solid #e0e0e0;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 8px 6px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+        }
+
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        .status-badge.active {
+            background: #e8f5e9;
+            color: #2E7D32;
+        }
+
+        .status-badge.progress {
+            background: #fff3e0;
+            color: #E65100;
+        }
+
+        .status-badge.completed {
+            background: #e3f2fd;
+            color: #1565C0;
+        }
+
+        .actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .action-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            margin-top: 12px;
+        }
+
+        .page-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .page-btn.active {
+            background: #1A237E;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 class="page-title">Maquettes des Principales Interfaces — E-Carto GS2E</h1>
+    <p class="page-subtitle" style="margin-bottom: 40px; color: #455a64; text-align: center;">Wireframes UI/UX</p>
+
+    <div class="grid">
+        <!-- 1. LOGIN -->
+        <div class="wireframe">
+            <div class="wireframe-label">1. Page de Connexion (Login)</div>
+            <div class="wireframe-content login-bg">
+                <div class="login-card">
+                    <div class="logo">E-<span>Carto</span></div>
+                    <div class="field">📧 Email</div>
+                    <div class="field">🔒 Mot de passe</div>
+                    <div class="login-btn">Se connecter</div>
+                    <p style="font-size: 10px; color: #999; margin-top: 10px;">Plateforme GS2E — Eranove Academy</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. DASHBOARD -->
+        <div class="wireframe">
+            <div class="wireframe-label">2. Tableau de Bord (Dashboard)</div>
+            <div class="wireframe-content" style="padding: 0;">
+                <div class="dash">
+                    <div class="sidebar">
+                        <div class="s-logo">E-C</div>
+                        <div class="s-item active">🏠</div>
+                        <div class="s-item">📁</div>
+                        <div class="s-item">🗺️</div>
+                        <div class="s-item">📈</div>
+                        <div class="s-item">⚙️</div>
+                    </div>
+                    <div class="dash-main">
+                        <div class="dash-header">
+                            <h4>Dashboard</h4>
+                            <div class="header-right">
+                                <div class="icon-btn">🌙</div>
+                                <div class="icon-btn">🔔</div>
+                            </div>
+                        </div>
+                        <div class="kpi-row">
+                            <div class="kpi">
+                                <div class="kpi-label">Projets</div>
+                                <div class="kpi-val">12</div>
+                            </div>
+                            <div class="kpi">
+                                <div class="kpi-label">Budget</div>
+                                <div class="kpi-val">45M</div>
+                            </div>
+                            <div class="kpi">
+                                <div class="kpi-label">Sites</div>
+                                <div class="kpi-val">16</div>
+                            </div>
+                            <div class="kpi">
+                                <div class="kpi-label">Membres</div>
+                                <div class="kpi-val">8</div>
+                            </div>
+                        </div>
+                        <div class="charts-row">
+                            <div class="chart-box">
+                                <h5>Statut des Projets</h5>
+                                <div class="chart-placeholder">🍩</div>
+                            </div>
+                            <div class="chart-box">
+                                <h5>Budget par Projet</h5>
+                                <div class="chart-placeholder">📊</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. CARTE -->
+        <div class="wireframe">
+            <div class="wireframe-label">3. Cartographie Interactive (Carte)</div>
+            <div class="wireframe-content" style="padding: 0; position: relative;">
+                <div class="map-area" style="min-height: 320px;">
+                    <div class="map-filters">
+                        <h5>🔽 Filtres Avancés</h5>
+                        <div class="filter-field">Type de site ▾</div>
+                        <div class="filter-field">Statut ▾</div>
+                        <div class="filter-field">Région ▾</div>
+                        <div style="display: flex; gap: 6px; margin-top: 8px;">
+                            <span style="font-size: 10px; color: #999;">Réinitialiser</span>
+                            <span
+                                style="font-size: 10px; background: #FF6F00; color: white; padding: 2px 8px; border-radius: 10px;">16
+                                sites</span>
+                        </div>
+                    </div>
+
+                    <!-- Markers -->
+                    <div class="marker green" style="top: 40%; left: 55%;"></div>
+                    <div class="marker green" style="top: 35%; left: 60%;"></div>
+                    <div class="marker green" style="top: 50%; left: 50%;"></div>
+                    <div class="marker red" style="top: 60%; left: 45%;"></div>
+                    <div class="marker red" style="top: 45%; left: 70%;"></div>
+                    <div class="marker blue" style="top: 55%; left: 65%;"></div>
+                    <div class="marker blue" style="top: 30%; left: 48%;"></div>
+                    <div class="marker orange" style="top: 70%; left: 55%;"></div>
+                    <div class="marker orange" style="top: 38%; left: 42%;"></div>
+                    <div class="marker green" style="top: 65%; left: 35%;"></div>
+
+                    <div class="map-text" style="position: absolute; top: 20%; right: 20%;">
+                        <span style="font-size: 11px; color: #aaa;">CÔTE D'IVOIRE</span>
+                    </div>
+
+                    <div class="legend-box">
+                        <h5>LÉGENDE</h5>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:#2E7D32;"></div> Actif
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:#C62828;"></div> Inactif
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:#0277BD;"></div> En Maintenance
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:#F57C00;"></div> En Construction
+                        </div>
+                    </div>
+
+                    <div class="stats-badge">16 site(s) trouvé(s)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. PROJETS -->
+        <div class="wireframe">
+            <div class="wireframe-label">4. Liste des Projets</div>
+            <div class="wireframe-content">
+                <div class="proj-header">
+                    <h4>📁 Gestion des Projets</h4>
+                    <div class="proj-btns">
+                        <div class="btn-outline">📤 Export Excel</div>
+                        <div class="btn-solid">+ Nouveau</div>
+                    </div>
+                </div>
+                <div class="search-bar">🔍 Rechercher un projet...</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Client</th>
+                            <th>Statut</th>
+                            <th>Budget</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Infrastructure Réseau</td>
+                            <td>GS2E</td>
+                            <td><span class="status-badge active">Actif</span></td>
+                            <td>15M FCFA</td>
+                            <td>
+                                <div class="actions">
+                                    <div class="action-btn">✏️</div>
+                                    <div class="action-btn">🗑️</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Déploiement Fibre</td>
+                            <td>ERANOVE</td>
+                            <td><span class="status-badge progress">En cours</span></td>
+                            <td>8.5M FCFA</td>
+                            <td>
+                                <div class="actions">
+                                    <div class="action-btn">✏️</div>
+                                    <div class="action-btn">🗑️</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Audit Sécurité</td>
+                            <td>GS2E</td>
+                            <td><span class="status-badge completed">Terminé</span></td>
+                            <td>3.2M FCFA</td>
+                            <td>
+                                <div class="actions">
+                                    <div class="action-btn">✏️</div>
+                                    <div class="action-btn">🗑️</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Migration Cloud</td>
+                            <td>SODECI</td>
+                            <td><span class="status-badge active">Actif</span></td>
+                            <td>22M FCFA</td>
+                            <td>
+                                <div class="actions">
+                                    <div class="action-btn">✏️</div>
+                                    <div class="action-btn">🗑️</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <div class="page-btn">‹</div>
+                    <div class="page-btn active">1</div>
+                    <div class="page-btn">2</div>
+                    <div class="page-btn">3</div>
+                    <div class="page-btn">›</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

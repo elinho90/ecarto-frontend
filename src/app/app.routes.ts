@@ -43,6 +43,18 @@ export const routes: Routes = [
         data: { allowedRoles: [Role.ADMINISTRATEUR_SYSTEME, Role.CHEF_DE_PROJET] }
       },
       {
+        path: 'comites',
+        loadChildren: () => import('./features/comites/comites.routes').then(m => m.COMITES_ROUTES),
+        canActivate: [roleGuard],
+        data: { allowedRoles: [Role.ADMINISTRATEUR_SYSTEME, Role.CHEF_DE_PROJET, Role.DECIDEUR] }
+      },
+      {
+        path: 'entites',
+        loadChildren: () => import('./features/entites/entites.routes').then(m => m.ENTITES_ROUTES),
+        canActivate: [roleGuard],
+        data: { allowedRoles: [Role.ADMINISTRATEUR_SYSTEME, Role.CHEF_DE_PROJET, Role.DECIDEUR] }
+      },
+      {
         path: 'utilisateurs',
         loadChildren: () => import('./features/utilisateurs/utilisateurs.routes').then(m => m.UTILISATEURS_ROUTES),
         canActivate: [roleGuard],

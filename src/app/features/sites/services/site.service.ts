@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { Page } from '../../../shared/models/page.model';
   providedIn: 'root'
 })
 export class SiteService {
-  private readonly API_URL = 'http://localhost:8080/api/sites';
+  private readonly API_URL = 'http://localhost:8080/api/v1/sites';
 
   constructor(private http: HttpClient) { }
 

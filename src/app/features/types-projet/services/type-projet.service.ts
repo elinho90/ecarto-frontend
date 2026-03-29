@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { Page } from '../../../shared/models/page.model';
   providedIn: 'root'
 })
 export class TypeProjetService {
-  private readonly API_URL = 'http://localhost:8080/api/types-projet';
+  private readonly API_URL = 'http://localhost:8080/api/v1/types-projet';
 
   constructor(private http: HttpClient) { }
 

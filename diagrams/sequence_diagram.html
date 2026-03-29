@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Diagrammes de Séquence - E-Carto</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background: white;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #1A237E;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            color: #455a64;
+            font-size: 16px;
+            font-weight: 400;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            color: #1A237E;
+            font-size: 20px;
+            margin-top: 40px;
+            margin-bottom: 10px;
+        }
+
+        .mermaid {
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 30px;
+        }
+
+        hr {
+            border: 1px solid #e0e0e0;
+            width: 100%;
+            max-width: 1100px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Diagrammes de Séquence — E-Carto GS2E</h1>
+    <h2>Processus Clés de la Plateforme</h2>
+
+    <h3>1. Authentification JWT</h3>
+    <div class="mermaid">
+        sequenceDiagram
+        actor U as 👤 Utilisateur
+        participant F as 🌐 Angular Frontend
+        participant AC as 🔑 AuthController
+        participant SS as 🛡️ Spring Security
+        participant DB as 🗄️ Base de Données
+
+        U->>F: Saisir email + mot de passe
+        F->>AC: POST /api/auth/login {email, password}
+        AC->>SS: authenticate(credentials)
+        SS->>DB: SELECT * FROM utilisateur WHERE email = ?
+        DB-->>SS: Utilisateur trouvé (rôle, hash)
+        SS->>SS: Vérifier BCrypt password
+        SS-->>AC: ✅ Authentication validée
+        AC->>AC: Générer JWT Token (expiration 24h)
+        AC-->>F: 200 OK {token, refreshToken, utilisateur, rôle}
+        F->>F: Stocker token dans localStorage
+        F->>F: Configurer HttpInterceptor (Authorization: Bearer)
+        F-->>U: ✅ Redirection vers Dashboard
+    </div>
+
+    <hr>
+
+    <h3>2. Création et Visualisation d'un Site sur la Carte</h3>
+    <div class="mermaid">
+        sequenceDiagram
+        actor CP as 👷 Chef de Projet
+        participant F as 🌐 Angular Frontend
+        participant SC as 📍 SiteController
+        participant SV as ⚙️ SiteService
+        participant DB as 🗄️ Base de Données
+
+        CP->>F: Remplir formulaire (nom, adresse, lat, lng, statut)
+        F->>F: Validation Angular Reactive Forms
+        F->>SC: POST /api/sites {siteDto}
+        Note over SC: @PreAuthorize("ADMIN, CHEF_DE_PROJET")
+        SC->>SV: createSite(siteDto)
+        SV->>SV: Valider coordonnées GPS
+        SV->>DB: INSERT INTO site (nom, latitude, longitude, statut, ...)
+        DB-->>SV: Site créé (id = 15)
+        SV-->>SC: SiteDto response
+        SC-->>F: 201 Created {site}
+        F->>F: Ajouter marqueur Leaflet avec couleur statut
+        Note over F: Actif=🟢 Inactif=🔴 Maintenance=🔵 Construction=🟠
+        F-->>CP: ✅ Site affiché sur la carte avec animation pulse
+    </div>
+
+    <hr>
+
+    <h3>3. Génération d'un Rapport Projet</h3>
+    <div class="mermaid">
+        sequenceDiagram
+        actor D as 🏛️ Décideur
+        participant F as 🌐 Angular Frontend
+        participant RC as 📈 RapportController
+        participant RS as ⚙️ RapportService
+        participant PS as 📁 ProjetService
+        participant DB as 🗄️ Base de Données
+
+        D->>F: Sélectionner un projet et demander un rapport
+        F->>RC: POST /api/rapports {projetId, type}
+        RC->>RS: generateRapport(projetId)
+        RS->>PS: getProjetById(projetId)
+        PS->>DB: SELECT * FROM projet WHERE id = ?
+        DB-->>PS: Projet data
+        RS->>DB: SELECT * FROM site WHERE projet_id = ?
+        DB-->>RS: Liste des sites
+        RS->>DB: SELECT * FROM task WHERE projet_id = ?
+        DB-->>RS: Liste des tâches
+        RS->>RS: Calculer statistiques (budget, avancement, KPIs)
+        RS->>DB: INSERT INTO rapport (...)
+        DB-->>RS: Rapport créé
+        RS-->>RC: RapportDto
+        RC-->>F: 200 OK {rapport}
+        F-->>D: ✅ Affichage du rapport détaillé
+    </div>
+
+    <script>mermaid.initialize({ startOnLoad: true, theme: 'default', sequence: { showSequenceNumbers: true, actorMargin: 80, messageFontSize: 13 } });</script>
+</body>
+
+</html>

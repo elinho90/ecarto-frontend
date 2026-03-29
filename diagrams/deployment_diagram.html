@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Diagramme de Déploiement - E-Carto</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background: white;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #1A237E;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            color: #455a64;
+            font-size: 16px;
+            font-weight: 400;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        .mermaid {
+            width: 100%;
+            max-width: 1200px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Diagramme de Déploiement — E-Carto GS2E</h1>
+    <h2>Architecture Technique de la Plateforme</h2>
+    <div class="mermaid">
+        graph TB
+        subgraph CLIENT["🖥️ Poste Client — Navigateur Web"]
+        direction TB
+        SPA["<b>Angular 17 SPA</b><br />TypeScript • Standalone Components"]
+        SPA --- LEAFLET["🗺️ Leaflet.js<br />Cartes interactives"]
+        SPA --- CHARTJS["📊 Chart.js<br />Graphiques statistiques"]
+        SPA --- MATUI["🎨 Angular Material<br />Composants UI"]
+        SPA --- GUARD["🛡️ Auth Guard<br />JWT Interceptor"]
+        end
+
+        subgraph SERVER["⚙️ Serveur Application — Spring Boot 3"]
+        direction TB
+        API["<b>REST API — Java 17</b><br />Port 8080"]
+        API --- SEC["🔐 Spring Security<br />JWT Authentication"]
+        API --- JPA["📦 Spring Data JPA<br />Hibernate ORM"]
+
+        subgraph MODULES["📂 Modules Métier"]
+        direction LR
+        M1["📁 Projet"]
+        M2["📍 Site"]
+        M3["📈 Rapport"]
+        M4["✅ Task"]
+        M5["🏷️ TypeProjet"]
+        M6["👥 Utilisateur"]
+        M7["🔔 Notification"]
+        end
+        API --- MODULES
+        end
+
+        subgraph DATABASE["🗄️ Base de Données — MySQL"]
+        direction TB
+        DB["<b>MySQL Server</b><br />Port 3306"]
+        DB --- T1["Tables: utilisateur, projet,<br />site, rapport, task,<br />type_projet, notification"]
+        end
+
+        subgraph EXTERNAL["🌐 Services Externes"]
+        direction TB
+        OSM["🗺️ OpenStreetMap<br />Tiles cartographiques"]
+        CARTO["🛰️ CARTO / Esri<br />Vue satellite"]
+        end
+
+        CLIENT ===>|"HTTPS / REST API<br />JSON — Port 4200 → 8080"| SERVER
+        SERVER ===>|"JDBC / JPA<br />TCP/IP — Port 3306"| DATABASE
+        CLIENT -.->|"HTTPS<br />Tile Requests"| EXTERNAL
+
+        style CLIENT fill:#E3F2FD,stroke:#1565C0,stroke-width:2px,color:#0D47A1
+        style SERVER fill:#FFF3E0,stroke:#E65100,stroke-width:2px,color:#BF360C
+        style DATABASE fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,color:#1B5E20
+        style EXTERNAL fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px,color:#4A148C
+        style MODULES fill:#FFF8E1,stroke:#FF8F00,stroke-width:1px
+    </div>
+    <script>mermaid.initialize({ startOnLoad: true, theme: 'default', flowchart: { htmlLabels: true, curve: 'basis', nodeSpacing: 30, rankSpacing: 50 } });</script>
+</body>
+
+</html>

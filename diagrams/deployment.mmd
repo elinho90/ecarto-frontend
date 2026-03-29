@@ -1,0 +1,49 @@
+graph TB
+    subgraph CLIENT["Poste Client - Navigateur Web"]
+        direction TB
+        SPA["Angular 17 SPA<br/>TypeScript Standalone Components"]
+        SPA --- LEAFLET["Leaflet.js - Cartes interactives"]
+        SPA --- CHARTJS["Chart.js - Graphiques"]
+        SPA --- MATUI["Angular Material - UI"]
+        SPA --- GUARD["Auth Guard + JWT Interceptor"]
+    end
+
+    subgraph SERVER["Serveur Application - Spring Boot 3"]
+        direction TB
+        API["REST API - Java 17<br/>Port 8080"]
+        API --- SEC["Spring Security + JWT"]
+        API --- JPA["Spring Data JPA + Hibernate"]
+        
+        subgraph MODULES["Modules Metier"]
+            direction LR
+            M1["Projet"]
+            M2["Site"]
+            M3["Rapport"]
+            M4["Task"]
+            M5["TypeProjet"]
+            M6["Utilisateur"]
+            M7["Notification"]
+        end
+        API --- MODULES
+    end
+
+    subgraph DATABASE["Base de Donnees - MySQL"]
+        direction TB
+        DB["MySQL Server Port 3306"]
+        DB --- T1["Tables: utilisateur, projet,<br/>site, rapport, task,<br/>type_projet, notification"]
+    end
+
+    subgraph EXTERNAL["Services Externes"]
+        direction TB
+        OSM["OpenStreetMap Tiles"]
+        CARTO["CARTO / Esri Satellite"]
+    end
+
+    CLIENT ==>|"HTTPS REST API JSON<br/>Port 4200 vers 8080"| SERVER
+    SERVER ==>|"JDBC JPA<br/>TCP/IP Port 3306"| DATABASE
+    CLIENT -.->|"HTTPS Tile Requests"| EXTERNAL
+
+    style CLIENT fill:#E3F2FD,stroke:#1565C0,stroke-width:2px
+    style SERVER fill:#FFF3E0,stroke:#E65100,stroke-width:2px
+    style DATABASE fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px
+    style EXTERNAL fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px

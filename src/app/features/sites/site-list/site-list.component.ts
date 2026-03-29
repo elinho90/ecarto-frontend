@@ -6,6 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { SiteService } from '../services/site.service';
+import { ExportService } from '../../../shared/services/export.service';
 import { Site } from '../../../shared/models/site.model';
 import { Page } from '../../../shared/models/page.model';
 
@@ -63,6 +64,10 @@ import { Page } from '../../../shared/models/page.model';
             </mat-paginator>
 
             <div class="mt-8 flex items-center justify-end gap-4">
+              <button mat-flat-button class="btn-export" (click)="exportToExcel()">
+                <i class="fas fa-file-excel mr-2"></i>
+                Export Excel
+              </button>
               <button mat-flat-button class="btn-orange-outline" routerLink="../carte">
                 <i class="fas fa-map mr-2"></i>
                 Voir la carte
@@ -166,6 +171,20 @@ import { Page } from '../../../shared/models/page.model';
     .status-inactif { color: #d32f2f; font-weight: 600; background: #ffebee; padding: 2px 8px; border-radius: 4px; }
     .status-en-construction { color: #f57c00; font-weight: 600; background: #fff3e0; padding: 2px 8px; border-radius: 4px; }
     .status-en-maintenance { color: #1976d2; font-weight: 600; background: #e3f2fd; padding: 2px 8px; border-radius: 4px; }
+
+    .btn-export {
+      background-color: #217346 !important;
+      color: white !important;
+      border-radius: 8px !important;
+      padding: 0 20px !important;
+      height: 44px !important;
+      transition: all 0.3s !important;
+    }
+
+    .btn-export:hover {
+      background-color: #1a5c38 !important;
+      transform: translateY(-2px);
+    }
   `]
 })
 export class SiteListComponent implements OnInit {
@@ -178,7 +197,10 @@ export class SiteListComponent implements OnInit {
   totalElements = 0;
   totalPages = 0;
 
-  constructor(private siteService: SiteService) { }
+  constructor(
+    private siteService: SiteService,
+    private exportService: ExportService
+  ) { }
 
   ngOnInit(): void {
     this.loadSites();
@@ -211,5 +233,16 @@ export class SiteListComponent implements OnInit {
 
   getStatutClass(statut: string): string {
     return `status-${statut.toLowerCase().replace('_', '-')}`;
+  }
+
+  exportToExcel(): void {
+    this.siteService.getAllSitesForMap().subscribe({
+      next: (sites) => {
+        this.exportService.exportSites(sites);
+      },
+      error: (error) => {
+        console.error('Erreur lors de l\'export:', error);
+      }
+    });
   }
 }

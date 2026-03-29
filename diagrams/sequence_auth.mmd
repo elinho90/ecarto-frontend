@@ -1,0 +1,18 @@
+sequenceDiagram
+    actor U as Utilisateur
+    participant F as Angular Frontend
+    participant AC as AuthController
+    participant SS as Spring Security
+    participant DB as Base de Donnees
+
+    U->>F: Saisir email + mot de passe
+    F->>AC: POST /api/auth/login
+    AC->>SS: authenticate(credentials)
+    SS->>DB: SELECT FROM utilisateur WHERE email=?
+    DB-->>SS: Utilisateur trouve
+    SS->>SS: Verifier BCrypt password
+    SS-->>AC: Authentication validee
+    AC->>AC: Generer JWT Token (24h)
+    AC-->>F: 200 OK {token, role, user}
+    F->>F: Stocker token localStorage
+    F-->>U: Redirection Dashboard

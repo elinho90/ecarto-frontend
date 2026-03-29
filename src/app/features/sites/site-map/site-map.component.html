@@ -14,6 +14,9 @@
         <app-button variant="secondary" icon="fas fa-sync" size="sm" (clicked)="onRefresh()">
           Actualiser
         </app-button>
+        <app-button variant="secondary" icon="fas fa-fire" size="sm" (clicked)="toggleHeatmap()" [class.active]="showHeatmap">
+          Heatmap
+        </app-button>
         <app-button variant="primary" icon="fas fa-plus" (clicked)="onAddSite()">
           Nouveau Site
         </app-button>
@@ -69,6 +72,26 @@
           </div>
 
           <div class="filter-group">
+            <label>Comité de pilotage</label>
+            <select formControlName="comite" class="modern-select">
+              <option value="">Tous les comités</option>
+              <option *ngFor="let c of comitesOptions" [value]="c.id">
+                {{ c.nom }}
+              </option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Entité commanditaire</label>
+            <select formControlName="entite" class="modern-select">
+              <option value="">Toutes les entités</option>
+              <option *ngFor="let e of entitesOptions" [value]="e.id">
+                {{ e.nom }}
+              </option>
+            </select>
+          </div>
+
+          <div class="filter-group">
             <label>Région</label>
             <select formControlName="region" (change)="onRegionChange()" class="modern-select">
               <option value="">Toutes les régions</option>
@@ -93,16 +116,20 @@
       <div class="legend-header">Légende</div>
       <div class="legend-items">
         <div class="legend-item">
-          <span class="dot pulse-orange"></span>
+          <span class="dot green"></span>
           <span>Actif</span>
         </div>
         <div class="legend-item">
-          <span class="dot gray"></span>
+          <span class="dot red"></span>
           <span>Inactif</span>
         </div>
         <div class="legend-item">
           <span class="dot blue"></span>
-          <span>Maintenance</span>
+          <span>En Maintenance</span>
+        </div>
+        <div class="legend-item">
+          <span class="dot orange"></span>
+          <span>En Construction</span>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -22,6 +22,8 @@ import { TypeSite } from '../../../shared/enums/type-site.enum';
 import { StatutSite } from '../../../shared/enums/statut-site.enum';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { SharedModule } from '../../../shared/shared.module';
+import { ComiteService } from '../../comites/services/comite.service';
+import { EntiteService } from '../../entites/services/entite.service';
 
 @Component({
   selector: 'app-site-map',
@@ -51,6 +53,9 @@ export class SiteMapComponent implements OnInit {
   filteredSites: Site[] = [];
   isLoading = true;
   sidebarOpen = true;
+  showHeatmap = false;
+
+  @ViewChild(MapComponent) mapComponent!: MapComponent;
 
   TypeSite = TypeSite;
   StatutSite = StatutSite;
@@ -61,6 +66,8 @@ export class SiteMapComponent implements OnInit {
   statutOptions = Object.values(StatutSite);
   regions: string[] = [];
   villes: string[] = [];
+  comitesOptions: any[] = [];
+  entitesOptions: any[] = [];
 
   isHandset$: Observable<boolean>;
 
@@ -68,6 +75,8 @@ export class SiteMapComponent implements OnInit {
   private fb = inject(FormBuilder);
   private breakpointObserver = inject(BreakpointObserver);
   private router = inject(Router);
+  private comiteService = inject(ComiteService);
+  private entiteService = inject(EntiteService);
 
   constructor() {
     this.isHandset$ = this.breakpointObserver.observe(['(max-width: 768px)'])
@@ -80,7 +89,9 @@ export class SiteMapComponent implements OnInit {
       typeSite: [''],
       statut: [''],
       region: [''],
-      ville: ['']
+      ville: [''],
+      comite: [''],
+      entite: ['']
     });
 
     this.filterForm.valueChanges.subscribe(() => {
@@ -90,9 +101,21 @@ export class SiteMapComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    this.loadReferentiels();
 
     this.isHandset$.subscribe((isHandset: boolean) => {
       this.sidebarOpen = !isHandset;
+    });
+  }
+
+  loadReferentiels(): void {
+    this.comiteService.getAllComites().subscribe({
+      next: (data) => this.comitesOptions = data || [],
+      error: () => {}
+    });
+    this.entiteService.getAllEntites().subscribe({
+      next: (data) => this.entitesOptions = data || [],
+      error: () => {}
     });
   }
 
@@ -174,6 +197,13 @@ export class SiteMapComponent implements OnInit {
 
   toggleSidebar(): void {
     this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  toggleHeatmap(): void {
+    if (this.mapComponent) {
+      this.mapComponent.toggleHeatmap();
+      this.showHeatmap = this.mapComponent.showHeatmap;
+    }
   }
 
   onSiteClick(site: Site): void {

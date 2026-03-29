@@ -1,0 +1,20 @@
+sequenceDiagram
+    actor CP as Chef de Projet
+    participant F as Angular Frontend
+    participant SC as SiteController
+    participant SV as SiteService
+    participant DB as Base de Donnees
+
+    CP->>F: Remplir formulaire site
+    F->>F: Validation Angular Forms
+    F->>SC: POST /api/sites {siteDto}
+    Note over SC: PreAuthorize ADMIN ou CHEF_DE_PROJET
+    SC->>SV: createSite(siteDto)
+    SV->>SV: Valider coordonnees GPS
+    SV->>DB: INSERT INTO site (...)
+    DB-->>SV: Site cree (id=15)
+    SV-->>SC: SiteDto response
+    SC-->>F: 201 Created {site}
+    F->>F: Ajouter marqueur Leaflet couleur statut
+    Note over F: Actif=Vert Inactif=Rouge Maintenance=Bleu Construction=Orange
+    F-->>CP: Site affiche sur la carte avec animation

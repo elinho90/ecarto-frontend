@@ -65,10 +65,20 @@ export class ProjetFormComponent implements OnInit {
   utilisateurs: Utilisateur[] = [];
 
   statuts = [
-    { value: StatutProjet.PREVU, label: 'À Venir' },
+    { value: StatutProjet.IDEE, label: 'Idée' },
+    { value: StatutProjet.CADRAGE, label: 'Cadrage' },
+    { value: StatutProjet.ETUDE_FAISABILITE, label: 'Étude Faisabilité' },
+    { value: StatutProjet.VALIDE, label: 'Validé' },
     { value: StatutProjet.EN_COURS, label: 'En Cours' },
-    { value: StatutProjet.TERMINE, label: 'Terminé' },
-    { value: StatutProjet.ANNULE, label: 'Annulé' }
+    { value: StatutProjet.EN_PAUSE, label: 'En Pause' },
+    { value: StatutProjet.RECETTE, label: 'Recette' },
+    { value: StatutProjet.DEPLOIEMENT, label: 'Déploiement' },
+    { value: StatutProjet.EN_PRODUCTION, label: 'En Production' },
+    { value: StatutProjet.CLOTURE, label: 'Clôturé' },
+    { value: StatutProjet.REJETE, label: 'Rejeté' },
+    { value: StatutProjet.PREVU, label: 'À Venir (Ancien)' },
+    { value: StatutProjet.TERMINE, label: 'Terminé (Ancien)' },
+    { value: StatutProjet.ANNULE, label: 'Annulé (Ancien)' }
   ];
 
   priorites = [
@@ -87,6 +97,7 @@ export class ProjetFormComponent implements OnInit {
       responsable: ['', [Validators.required]],
       dateDebut: [new Date(), [Validators.required]],
       dateFinPrevue: [null],
+      dateFinReelle: [null],
       budget: [null, [Validators.min(0)]],
       progression: [0, [Validators.min(0), Validators.max(100)]],
       typeProjetId: [null, [Validators.required]],
@@ -137,7 +148,8 @@ export class ProjetFormComponent implements OnInit {
         this.projetForm.patchValue({
           ...projet,
           dateDebut: projet.dateDebut ? new Date(projet.dateDebut) : null,
-          dateFinPrevue: projet.dateFinPrevue ? new Date(projet.dateFinPrevue) : null
+          dateFinPrevue: projet.dateFinPrevue ? new Date(projet.dateFinPrevue) : null,
+          dateFinReelle: projet.dateFinReelle ? new Date(projet.dateFinReelle) : null
         });
         this.isLoading = false;
       },

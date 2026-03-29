@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { RapportService } from '../services/rapport.service';
 import { ProjetService } from '../../projets/services/projet.service';
+import { AuthService } from '../../../auth/services/auth.service';
 import { Rapport } from '../../../shared/models/rapport.model';
 import { Projet } from '../../../shared/models/projet.model';
 
@@ -123,20 +124,21 @@ export class RapportFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private rapportService = inject(RapportService);
   private projetService = inject(ProjetService);
+  private authService = inject(AuthService);
   private snackBar = inject(MatSnackBar);
   private dialogRef = inject(MatDialogRef<RapportFormComponent>);
   private data = inject(MAT_DIALOG_DATA, { optional: true });
 
   constructor() {
     this.rapportForm = this.fb.group({
-      nom: ['', Validators.required],
-      description: [''],
+      nom: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(200)]],
+      description: ['', [Validators.maxLength(2000)]],
       projetId: [null],
-      faisabilite: [50, [Validators.min(0), Validators.max(100)]],
+      faisabilite: [50, [Validators.required, Validators.min(0), Validators.max(100)]],
       risque: ['MOYEN', Validators.required],
-      budgetEstime: [0],
-      dureeEstimeeMois: [1],
-      recommandations: [''],
+      budgetEstime: [null, [Validators.min(0.01)]],
+      dureeEstimeeMois: [1, [Validators.required, Validators.min(1), Validators.max(120)]],
+      recommandations: ['', [Validators.maxLength(5000)]],
       analyseAutomatique: [false]
     });
   }
@@ -190,8 +192,9 @@ export class RapportFormComponent implements OnInit {
       const rapportBlob = new Blob([JSON.stringify(rapportData)], { type: 'application/json' });
       formData.append('rapport', rapportBlob);
 
-      // Pour uploadePar on utilise un placeholder ou on récupère le vrai user si dispo
-      const uploadePar = 'Admin';
+      // Récupérer l'utilisateur connecté pour uploadePar
+      const currentUser = this.authService.getCurrentUser();
+      const uploadePar = currentUser ? `${currentUser.prenom} ${currentUser.nom}` : 'Utilisateur';
 
       this.rapportService.createRapport(formData, uploadePar).subscribe({
         next: () => {

@@ -11,6 +11,9 @@
             </div>
 
             <div class="header-actions">
+                <app-button variant="ghost" icon="fas fa-file-excel" size="sm" (clicked)="exportToExcel()">
+                    Export Excel
+                </app-button>
                 <app-button variant="secondary" icon="fas fa-sync" size="sm" (clicked)="loadRapports()">
                     Actualiser
                 </app-button>

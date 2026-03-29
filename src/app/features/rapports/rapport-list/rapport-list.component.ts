@@ -10,6 +10,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { RapportService } from '../services/rapport.service';
+import { ExportService } from '../../../shared/services/export.service';
 import { Rapport } from '../../../shared/models/rapport.model';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { SharedModule } from '../../../shared/shared.module';
@@ -60,6 +61,7 @@ export class RapportListComponent implements OnInit {
   totalPages = 1;
 
   private rapportService = inject(RapportService);
+  private exportService = inject(ExportService);
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
 
@@ -79,7 +81,7 @@ export class RapportListComponent implements OnInit {
 
   loadRapports(): void {
     this.isLoading = true;
-    const search = this.searchControl.value;
+    const search = this.searchControl.value?.trim();
 
     const obs = search
       ? this.rapportService.searchRapports({ nom: search }, this.currentPage - 1, this.itemsPerPage)
@@ -230,5 +232,17 @@ export class RapportListComponent implements OnInit {
 
   hasRole(roles: string[]): boolean {
     return true;
+  }
+
+  exportToExcel(): void {
+    this.rapportService.getAllRapports(0, 1000).subscribe({
+      next: (page) => {
+        this.exportService.exportRapports(page.content);
+        this.snackBar.open('Export Excel généré avec succès', 'Fermer', { duration: 3000 });
+      },
+      error: () => {
+        this.snackBar.open('Erreur lors de l\'export', 'Fermer', { duration: 3000 });
+      }
+    });
   }
 }

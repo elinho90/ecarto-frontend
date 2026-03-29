@@ -1,6 +1,49 @@
 <div class="map-wrapper">
   <div id="map" [style.height]="height" class="map-container"></div>
+
+  <div class="map-controls" *ngIf="showControls">
+    <div class="control-group">
+      <button class="map-btn" [class.active]="currentLayer === 'standard'" (click)="setLayer('standard')"
+        title="Carte Standard">
+        <i class="fas fa-map"></i>
+      </button>
+      <button class="map-btn" [class.active]="currentLayer === 'satellite'" (click)="setLayer('satellite')"
+        title="Satellite">
+        <i class="fas fa-satellite"></i>
+      </button>
+    </div>
+
+    <div class="control-group">
+      <button class="map-btn" [class.active]="useClusters" (click)="toggleClusters()" title="Regrouper les marqueurs">
+        <i class="fas fa-layer-group"></i>
+      </button>
+      <button class="map-btn" [class.active]="showHeatmap" (click)="toggleHeatmap()" title="Carte de chaleur">
+        <i class="fas fa-fire"></i>
+      </button>
+    </div>
+
+    <div class="control-group">
+      <button class="map-btn" [class.active]="isMeasuring" (click)="toggleMeasure()" title="Mesurer une distance">
+        <i class="fas fa-ruler"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="measure-info" *ngIf="isMeasuring && measureDistance > 0">
+    Distance: <strong>{{ formatDistance(measureDistance) }}</strong>
+    <button class="clear-btn" (click)="clearMeasure()"><i class="fas fa-times"></i></button>
+  </div>
+
   <div class="map-stats" *ngIf="sites.length > 0">
     <span class="badge">{{ sites.length }} site(s) trouvé(s)</span>
+  </div>
+
+  <!-- Legend -->
+  <div class="map-legend">
+    <h4>Légende</h4>
+    <div class="legend-item"><span class="dot actif"></span> Actif</div>
+    <div class="legend-item"><span class="dot inactif"></span> Inactif</div>
+    <div class="legend-item"><span class="dot maintenance"></span> En Maintenance</div>
+    <div class="legend-item"><span class="dot construction"></span> En Construction</div>
   </div>
 </div>

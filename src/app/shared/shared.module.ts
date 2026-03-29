@@ -6,7 +6,11 @@ import { CardComponent } from './components/ui/card/card.component';
 import { BadgeComponent } from './components/ui/badge/badge.component';
 import { LoadingComponent } from './components/ui/loading/loading.component';
 import { LogoComponent } from './components/ui/logo/logo.component';
-// MapComponent n'est PAS importé ici
+import { KpiWidgetComponent } from './components/widgets/kpi-widget.component';
+import { ComparisonChartComponent } from './components/charts/comparison-chart.component';
+import { ProjectStatusChartComponent } from './components/charts/project-status-chart.component';
+import { BudgetChartComponent } from './components/charts/budget-chart.component';
+import { ProgressTrendChartComponent } from './components/charts/progress-trend-chart.component';
 
 @NgModule({
   declarations: [
@@ -18,15 +22,24 @@ import { LogoComponent } from './components/ui/logo/logo.component';
     CardComponent,
     BadgeComponent,
     LoadingComponent,
-    LogoComponent
+    LogoComponent,
+    KpiWidgetComponent,
+    ComparisonChartComponent,
+    ProjectStatusChartComponent,
+    BudgetChartComponent,
+    ProgressTrendChartComponent
   ],
   exports: [
     ButtonComponent,
     CardComponent,
     BadgeComponent,
     LoadingComponent,
-    LogoComponent
-    // MapComponent retiré
+    LogoComponent,
+    KpiWidgetComponent,
+    ComparisonChartComponent,
+    ProjectStatusChartComponent,
+    BudgetChartComponent,
+    ProgressTrendChartComponent
   ]
 })
 export class SharedModule { }

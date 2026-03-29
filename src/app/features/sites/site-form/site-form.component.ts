@@ -12,7 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { SiteService } from '../services/site.service';
-import { Site } from '../../../shared/models/site.model';
+import { Site, TypeSite, StatutSite } from '../../../shared/models/site.model';
 import { AuthService } from '../../../auth/services/auth.service';
 import { Role } from '../../../shared/enums/role.enum';
 
@@ -36,94 +36,148 @@ import { Role } from '../../../shared/enums/role.enum';
       <mat-card>
         <mat-card-header>
           <mat-card-title>
-            <i class="fas fa-map-marker-alt mr-2"></i>
+            <mat-icon class="mr-2">location_on</mat-icon>
             {{ isEditMode ? 'Modifier le Site' : 'Ajouter un Nouveau Site' }}
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <form [formGroup]="siteForm" (ngSubmit)="onSubmit()" class="space-y-4">
+          <form [formGroup]="siteForm" (ngSubmit)="onSubmit()" class="form-grid">
+            
+            <!-- Section: Informations Générales -->
+            <h3 class="section-title">Informations Générales</h3>
+            
             <!-- Nom -->
-            <mat-form-field class="w-full">
+            <mat-form-field appearance="outline" class="full-width">
               <mat-label>Nom du site *</mat-label>
               <input matInput formControlName="nom" placeholder="Entrez le nom du site">
-              <mat-error *ngIf="siteForm.get('nom')?.hasError('required')">
-                Le nom est requis
-              </mat-error>
+              <mat-error *ngIf="siteForm.get('nom')?.hasError('required')">Le nom est requis</mat-error>
+              <mat-error *ngIf="siteForm.get('nom')?.hasError('minlength')">Minimum 3 caractères</mat-error>
             </mat-form-field>
 
-            <!-- Ville -->
-            <mat-form-field class="w-full">
-              <mat-label>Ville *</mat-label>
-              <input matInput formControlName="ville" placeholder="Entrez la ville">
-              <mat-error *ngIf="siteForm.get('ville')?.hasError('required')">
-                La ville est requise
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Région -->
-            <mat-form-field class="w-full">
-              <mat-label>Région *</mat-label>
-              <input matInput formControlName="region" placeholder="Entrez la région">
-              <mat-error *ngIf="siteForm.get('region')?.hasError('required')">
-                La région est requise
-              </mat-error>
+            <!-- Description -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" rows="3" placeholder="Description du site"></textarea>
             </mat-form-field>
 
             <!-- Type -->
-            <mat-form-field class="w-full">
+            <mat-form-field appearance="outline">
               <mat-label>Type de site *</mat-label>
               <mat-select formControlName="type">
-                <mat-option value="BUREAU_REGIONAL">Bureau Régional</mat-option>
-                <mat-option value="SITE_CLIENT">Site Client</mat-option>
-                <mat-option value="CENTRE_OPERATIONS">Centre d'Opérations</mat-option>
-                <mat-option value="DEPOT">Dépôt</mat-option>
+                <mat-option *ngFor="let t of typesSite" [value]="t.value">{{ t.label }}</mat-option>
               </mat-select>
-              <mat-error *ngIf="siteForm.get('type')?.hasError('required')">
-                Le type est requis
-              </mat-error>
+              <mat-error *ngIf="siteForm.get('type')?.hasError('required')">Le type est requis</mat-error>
             </mat-form-field>
 
             <!-- Statut -->
-            <mat-form-field class="w-full">
+            <mat-form-field appearance="outline">
               <mat-label>Statut *</mat-label>
               <mat-select formControlName="statut">
-                <mat-option value="ACTIF">Actif</mat-option>
-                <mat-option value="INACTIF">Inactif</mat-option>
-                <mat-option value="MAINTENANCE">En Maintenance</mat-option>
+                <mat-option *ngFor="let s of statutsSite" [value]="s.value">{{ s.label }}</mat-option>
               </mat-select>
-              <mat-error *ngIf="siteForm.get('statut')?.hasError('required')">
-                Le statut est requis
-              </mat-error>
+              <mat-error *ngIf="siteForm.get('statut')?.hasError('required')">Le statut est requis</mat-error>
+            </mat-form-field>
+
+            <!-- Section: Localisation -->
+            <h3 class="section-title">Localisation</h3>
+
+            <!-- Adresse -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Adresse *</mat-label>
+              <input matInput formControlName="adresse" placeholder="Adresse complète">
+              <mat-error *ngIf="siteForm.get('adresse')?.hasError('required')">L'adresse est requise</mat-error>
+            </mat-form-field>
+
+            <!-- Ville -->
+            <mat-form-field appearance="outline">
+              <mat-label>Ville *</mat-label>
+              <input matInput formControlName="ville" placeholder="Entrez la ville">
+              <mat-error *ngIf="siteForm.get('ville')?.hasError('required')">La ville est requise</mat-error>
+            </mat-form-field>
+
+            <!-- Région -->
+            <mat-form-field appearance="outline">
+              <mat-label>Région *</mat-label>
+              <input matInput formControlName="region" placeholder="Entrez la région">
+              <mat-error *ngIf="siteForm.get('region')?.hasError('required')">La région est requise</mat-error>
+            </mat-form-field>
+
+            <!-- Pays -->
+            <mat-form-field appearance="outline">
+              <mat-label>Pays</mat-label>
+              <input matInput formControlName="pays" placeholder="Pays">
             </mat-form-field>
 
             <!-- Latitude -->
-            <mat-form-field class="w-full">
-              <mat-label>Latitude</mat-label>
-              <input matInput type="number" formControlName="latitude" placeholder="Ex: 10.1234">
+            <mat-form-field appearance="outline">
+              <mat-label>Latitude *</mat-label>
+              <input matInput type="number" step="0.0001" formControlName="latitude" placeholder="Ex: 5.3600">
+              <mat-error *ngIf="siteForm.get('latitude')?.hasError('required')">La latitude est requise</mat-error>
+              <mat-error *ngIf="siteForm.get('latitude')?.hasError('min') || siteForm.get('latitude')?.hasError('max')">Entre -90 et 90</mat-error>
             </mat-form-field>
 
             <!-- Longitude -->
-            <mat-form-field class="w-full">
-              <mat-label>Longitude</mat-label>
-              <input matInput type="number" formControlName="longitude" placeholder="Ex: -5.5678">
+            <mat-form-field appearance="outline">
+              <mat-label>Longitude *</mat-label>
+              <input matInput type="number" step="0.0001" formControlName="longitude" placeholder="Ex: -4.0083">
+              <mat-error *ngIf="siteForm.get('longitude')?.hasError('required')">La longitude est requise</mat-error>
+              <mat-error *ngIf="siteForm.get('longitude')?.hasError('min') || siteForm.get('longitude')?.hasError('max')">Entre -180 et 180</mat-error>
             </mat-form-field>
 
-            <!-- Adresse -->
-            <mat-form-field class="w-full">
-              <mat-label>Adresse</mat-label>
-              <textarea matInput formControlName="adresse" placeholder="Entrez l'adresse complète"></textarea>
+            <!-- Section: Contact -->
+            <h3 class="section-title">Informations de Contact</h3>
+
+            <!-- Contact Personne -->
+            <mat-form-field appearance="outline">
+              <mat-label>Personne de contact</mat-label>
+              <input matInput formControlName="contactPersonne" placeholder="Nom du contact">
+            </mat-form-field>
+
+            <!-- Contact Téléphone -->
+            <mat-form-field appearance="outline">
+              <mat-label>Téléphone</mat-label>
+              <input matInput formControlName="contactTelephone" placeholder="+225 XX XX XX XX">
+              <mat-error *ngIf="siteForm.get('contactTelephone')?.hasError('pattern')">Format invalide</mat-error>
+            </mat-form-field>
+
+            <!-- Contact Email -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" formControlName="contactEmail" placeholder="contact@example.com">
+              <mat-error *ngIf="siteForm.get('contactEmail')?.hasError('email')">Email invalide</mat-error>
+            </mat-form-field>
+
+            <!-- Section: Détails Opérationnels -->
+            <h3 class="section-title">Détails Opérationnels</h3>
+
+            <!-- Nombre Employés -->
+            <mat-form-field appearance="outline">
+              <mat-label>Nombre d'employés</mat-label>
+              <input matInput type="number" formControlName="nombreEmployes" placeholder="0">
+              <mat-error *ngIf="siteForm.get('nombreEmployes')?.hasError('min')">Doit être positif</mat-error>
+            </mat-form-field>
+
+            <!-- Horaires Ouverture -->
+            <mat-form-field appearance="outline">
+              <mat-label>Horaires d'ouverture</mat-label>
+              <input matInput formControlName="horairesOuverture" placeholder="Ex: Lun-Ven 8h-17h">
+            </mat-form-field>
+
+            <!-- Équipements -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Équipements</mat-label>
+              <textarea matInput formControlName="equipements" rows="2" placeholder="Liste des équipements disponibles"></textarea>
             </mat-form-field>
 
             <!-- Boutons -->
-            <div class="flex gap-4 mt-6">
-              <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting">
-                <mat-icon *ngIf="!isSubmitting">save</mat-icon>
-                <mat-spinner *ngIf="isSubmitting" diameter="20" class="inline-block mr-2"></mat-spinner>
-                {{ isSubmitting ? 'Enregistrement...' : 'Enregistrer' }}
-              </button>
-              <button mat-raised-button type="button" (click)="onCancel()">
-                <mat-icon>close</mat-icon>
+            <div class="form-actions">
+              <button mat-button type="button" (click)="onCancel()" [disabled]="isSubmitting">
                 Annuler
+              </button>
+              <button mat-raised-button color="primary" type="submit" [disabled]="siteForm.invalid || isSubmitting">
+                <mat-icon *ngIf="!isSubmitting">save</mat-icon>
+                <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+                {{ isEditMode ? 'Enregistrer' : 'Créer le Site' }}
               </button>
             </div>
           </form>
@@ -133,15 +187,33 @@ import { Role } from '../../../shared/enums/role.enum';
   `,
   styles: [`
     .site-form-container {
-      max-width: 600px;
+      max-width: 800px;
       margin: 0 auto;
     }
-    mat-form-field {
-      display: block;
-      margin-bottom: 1rem;
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
     }
-    .space-y-4 > * {
-      margin-bottom: 1rem;
+    .full-width {
+      grid-column: 1 / -1;
+    }
+    .section-title {
+      grid-column: 1 / -1;
+      margin: 16px 0 8px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #f57c00;
+      color: #f57c00;
+      font-size: 1.1rem;
+    }
+    .form-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid #e0e0e0;
     }
   `]
 })
@@ -160,21 +232,49 @@ export class SiteFormComponent implements OnInit {
   siteId?: number;
   canEdit = false;
 
+  // Options pour les selects - alignées avec le backend
+  typesSite = [
+    { value: TypeSite.SIEGE_SOCIAL, label: 'Siège Social' },
+    { value: TypeSite.BUREAU_REGIONAL, label: 'Bureau Régional' },
+    { value: TypeSite.CENTRE_OPERATIONNEL, label: 'Centre Opérationnel' },
+    { value: TypeSite.DATACENTER, label: 'Datacenter' },
+    { value: TypeSite.SITE_CLIENT, label: 'Site Client' },
+    { value: TypeSite.FORMATION, label: 'Centre de Formation' }
+  ];
+
+  statutsSite = [
+    { value: StatutSite.ACTIF, label: 'Actif' },
+    { value: StatutSite.INACTIF, label: 'Inactif' },
+    { value: StatutSite.EN_CONSTRUCTION, label: 'En Construction' },
+    { value: StatutSite.EN_MAINTENANCE, label: 'En Maintenance' }
+  ];
+
   constructor() {
     this.siteForm = this.fb.group({
-      nom: ['', [Validators.required]],
+      // Informations générales
+      nom: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+      description: ['', [Validators.maxLength(1000)]],
+      type: [TypeSite.BUREAU_REGIONAL, [Validators.required]],
+      statut: [StatutSite.ACTIF, [Validators.required]],
+      // Localisation
+      adresse: ['', [Validators.required]],
       ville: ['', [Validators.required]],
       region: ['', [Validators.required]],
-      type: ['BUREAU_REGIONAL', [Validators.required]],
-      statut: ['ACTIF', [Validators.required]],
-      latitude: [null],
-      longitude: [null],
-      adresse: ['']
+      pays: ["Côte d'Ivoire"],
+      latitude: [null, [Validators.required, Validators.min(-90), Validators.max(90)]],
+      longitude: [null, [Validators.required, Validators.min(-180), Validators.max(180)]],
+      // Contact
+      contactPersonne: [''],
+      contactTelephone: ['', [Validators.pattern(/^\+?[0-9\s\-()]+$/)]],
+      contactEmail: ['', [Validators.email]],
+      // Détails opérationnels
+      nombreEmployes: [null, [Validators.min(1)]],
+      horairesOuverture: [''],
+      equipements: ['']
     });
   }
 
   ngOnInit(): void {
-    // Vérifier les permissions
     const currentUser = this.authService.getCurrentUser();
     this.canEdit = !!(currentUser && [Role.ADMINISTRATEUR_SYSTEME, Role.CHEF_DE_PROJET].includes(currentUser.role as Role));
 
@@ -197,7 +297,7 @@ export class SiteFormComponent implements OnInit {
 
   loadSite(): void {
     if (!this.siteId) return;
-    
+
     this.isLoading = true;
     this.siteService.getSiteById(this.siteId).subscribe({
       next: (site) => {

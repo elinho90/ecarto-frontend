@@ -1,6 +1,17 @@
 export enum StatutProjet {
-  PREVU = 'PREVU',
+  IDEE = 'IDEE',
+  CADRAGE = 'CADRAGE',
+  ETUDE_FAISABILITE = 'ETUDE_FAISABILITE',
+  VALIDE = 'VALIDE',
   EN_COURS = 'EN_COURS',
+  EN_PAUSE = 'EN_PAUSE',
+  RECETTE = 'RECETTE',
+  DEPLOIEMENT = 'DEPLOIEMENT',
+  EN_PRODUCTION = 'EN_PRODUCTION',
+  CLOTURE = 'CLOTURE',
+  REJETE = 'REJETE',
+  // Legacy statuts (for backwards compatibility if needed)
+  PREVU = 'PREVU',
   TERMINE = 'TERMINE',
   ANNULE = 'ANNULE'
 }

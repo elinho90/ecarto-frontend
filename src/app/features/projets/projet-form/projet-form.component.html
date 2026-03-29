@@ -123,6 +123,15 @@
                         <mat-datepicker #endPicker></mat-datepicker>
                     </mat-form-field>
 
+                    <!-- Date Fin Réelle -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Date de Fin Réelle</mat-label>
+                        <input matInput [matDatepicker]="realEndPicker" formControlName="dateFinReelle">
+                        <mat-hint>JJ/MM/AAAA</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="realEndPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #realEndPicker></mat-datepicker>
+                    </mat-form-field>
+
                     <!-- Budget -->
                     <mat-form-field appearance="outline">
                         <mat-label>Budget (FCFA)</mat-label>

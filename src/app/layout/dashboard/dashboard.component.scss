@@ -4,12 +4,14 @@
 .dashboard-wrapper {
   display: flex;
   height: 100vh;
-  width: 100vw;
+  height: 100dvh;
+  width: 100%;
   overflow: hidden;
   background-color: $bg-color;
-  padding: $spacing-4; // Espace pour le côté "flottant"
+  padding: $spacing-4;
   gap: $spacing-6;
   transition: all $transition-base;
+  box-sizing: border-box;
 }
 
 /* --- SIDEBAR FLOTTANTE --- */
@@ -230,6 +232,8 @@
   flex-direction: column;
   overflow: hidden;
   background: transparent;
+  min-width: 0;
+  min-height: 0;
 
   .top-header {
     height: var(--header-height);
@@ -289,6 +293,7 @@
     overflow-y: auto;
     padding-bottom: $spacing-4;
     scroll-behavior: smooth;
+    min-height: 0;
 
     &::-webkit-scrollbar {
       width: 4px;
@@ -346,6 +351,36 @@
   }
 }
 
+/* --- RESPONSIVE: collapse sidebar on small screens --- */
+@media (max-width: 1024px) {
+  .dashboard-wrapper {
+    padding: $spacing-2;
+    gap: $spacing-3;
+  }
+
+  .sidebar-wrapper {
+    width: 80px;
+
+    .sidebar-header {
+      justify-content: center;
+      padding: 0;
+    }
+
+    .nav-item {
+      justify-content: center;
+
+      .nav-icon-wrapper {
+        margin-right: 0;
+      }
+    }
+
+    .user-card {
+      justify-content: center;
+      padding: $spacing-2;
+    }
+  }
+}
+
 // Notifications Dropdown Overrides
 ::ng-deep .notification-dropdown {
   border-radius: $border-radius-lg !important;
@@ -355,15 +390,37 @@
   margin-top: 10px;
 }
 
-/* --- WATERMARK --- */
+/* --- WATERMARK LOGO GS2E FILIGRANE --- */
 .platform-watermark {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  opacity: 0.03;
+  bottom: 3rem;
+  right: 3rem;
+  opacity: 0.1;
   pointer-events: none;
   z-index: 5;
-  filter: grayscale(1);
-  transform: rotate(-15deg);
-  transition: opacity 0.3s ease;
+  transform: rotate(-15deg) scale(1);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+
+  .watermark-logo {
+    width: 200px;
+    height: auto;
+    filter: grayscale(0.3);
+  }
+
+  // Effet subtil au survol global du dashboard
+  .dashboard-wrapper:hover & {
+    opacity: 0.15;
+    transform: rotate(-15deg) scale(1.02);
+  }
+}
+
+// Version centrée pour les pages de contenu vide
+.watermark-centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 1;
 }

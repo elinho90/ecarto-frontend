@@ -36,6 +36,20 @@
             <span class="nav-icon-wrapper"><mat-icon>analytics</mat-icon></span>
             <span class="nav-text" *ngIf="sidebarOpen">Rapport projet</span>
           </a>
+
+          <a routerLink="/dashboard/comites" routerLinkActive="active" class="nav-item"
+            *ngIf="hasRole(['ADMINISTRATEUR_SYSTEME', 'CHEF_DE_PROJET', 'DECIDEUR'])"
+            [matTooltip]="!sidebarOpen ? 'Comités' : ''" matTooltipPosition="right">
+            <span class="nav-icon-wrapper"><mat-icon>groups_3</mat-icon></span>
+            <span class="nav-text" *ngIf="sidebarOpen">Comités</span>
+          </a>
+
+          <a routerLink="/dashboard/entites" routerLinkActive="active" class="nav-item"
+            *ngIf="hasRole(['ADMINISTRATEUR_SYSTEME', 'CHEF_DE_PROJET', 'DECIDEUR'])"
+            [matTooltip]="!sidebarOpen ? 'Entités' : ''" matTooltipPosition="right">
+            <span class="nav-icon-wrapper"><mat-icon>business</mat-icon></span>
+            <span class="nav-text" *ngIf="sidebarOpen">Entités</span>
+          </a>
         </div>
 
         <!-- Section Administration -->
@@ -89,6 +103,12 @@
       </div>
 
       <div class="header-right">
+        <!-- Theme Toggle Button -->
+        <button mat-icon-button (click)="toggleTheme()" class="theme-toggle-btn"
+          [matTooltip]="themeService.isDark ? 'Mode clair' : 'Mode sombre'">
+          <mat-icon>{{ themeService.isDark ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        </button>
+
         <button mat-icon-button [matMenuTriggerFor]="notificationMenu" class="notification-btn"
           matTooltip="Notifications">
           <mat-icon [matBadge]="dashboardStats.unreadNotifications"
@@ -135,8 +155,8 @@
     </div>
   </main>
 
-  <!-- Watermark -->
+  <!-- Watermark Logo GS2E Filigrane -->
   <div class="platform-watermark">
-    <app-logo [showText]="true" [scale]="2"></app-logo>
+    <img src="assets/gs2e-logo.png" alt="GS2E" class="watermark-logo">
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Utilisateur } from '../../../shared/models/utilisateur.model';
@@ -7,7 +7,7 @@ import { Utilisateur } from '../../../shared/models/utilisateur.model';
   providedIn: 'root'
 })
 export class UtilisateurService {
-  private readonly API_URL = 'http://localhost:8080/api/utilisateurs';
+  private readonly API_URL = 'http://localhost:8080/api/v1/utilisateurs';
 
   constructor(private http: HttpClient) {}
 
